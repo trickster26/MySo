@@ -1,0 +1,61 @@
+<?php session_start();?>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MySo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="../assets/styles/style.css">
+    <base href="http://localhost:8000">
+</head>
+  <body>
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">MySo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8000/templates/about.php">About Us</a>
+        </li>
+        <?php if (isset($_SESSION["login_user"])){ ?>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8000/templates/add-product.php">ADD Product</a>
+        </li>
+        <?php } ?>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8000/templates/items.php">Products</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="http://localhost:8000/templates/ContactUS.php" role="button">
+            Contact Us
+          </a>
+        </li>
+        
+      </ul>
+      <?php if (isset($_SESSION["login_user"])){ ?>
+      <div class="d-flex" role="search">
+        <a class="nav-link" href="http://localhost:8000/templates/edit-user.php">
+          <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" fill="green" class="bi bi-person-circle mx-3 mt-1" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+          </svg></a>
+        <a href="http://localhost:8000/src/controller/logout.php" class="btn btn-success me-2">LogOut</a>
+      </div>
+      <?php } else { ?>
+      <div class="d-flex" role="search">
+        <a href="http://localhost:8000/templates/login.php" class="btn btn-success me-2">Login</a>
+        <a href="http://localhost:8000/templates/signup.php" class="btn btn-outline-success">Register</a>
+      </div>
+      <?php } ?>
+    </div>
+  </div>         
+</nav>
+
