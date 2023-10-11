@@ -32,14 +32,17 @@ if ($result->num_rows > 0) {
     echo '<div class="container px-4 px-lg-5 mt-5">';
     echo '<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">';
     while ($row = $result->fetch_assoc()) {
+        if($row['visibility']==1){
         echo '<div class="col mb-5">';
         echo '<div class="card h-100">';
-        echo explode(".",$row['image'])[1];
-        echo '<img class="card-img-top" src="../assets/images/product_images/' . $row['id'] . '/' . $row['image'] . '.' . explode(".", $row['image'])[1] . '" alt="' . $row['product_name'] . '">';
+        echo '<img style="height:70%; max-height:300px; width:100%;" class="card-img-top" src="../assets/images/product_images/' . $row['id'] . '/' . $row['image'] . '.' . explode(".", $row['image'])[1] . '" alt="' . $row['product_name'] . '">';
         echo '<div class="card-body p-4">';        
         echo '<div class="text-center">';
         echo '<h5 class="fw-bolder">' . $row['product_name'] . '</h5>';
-        echo '$' . $row['min_price'] . ' - $' . $row['max_price'];
+        // echo '$' . $row['min_price'] . ' - $' . $row['max_price'];
+        // var_dump($row);
+        echo 'Rs. ';
+        if($productData['discount'] > 0 ){ echo $row['product_price'] - ($row['discount']*$row['product_price'])/100;}else{ echo  $row['product_price'];};
         echo '</div>';
         echo '</div>';
         echo '<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">';
@@ -47,6 +50,7 @@ if ($result->num_rows > 0) {
         echo '</div>';
         echo '</div>';
         echo '</div>';
+        }
     }
     echo '</div>';
     echo '</div>';

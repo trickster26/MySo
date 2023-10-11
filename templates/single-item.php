@@ -1,6 +1,9 @@
 <?php
-include '../src/model/Models.php';
+// session_start();
+require("../src/model/Models.php");
+// echo "iuiui";
 include_once("navbar.php"); 
+// echo "AMAN";
 ?>
 
 <?php
@@ -58,8 +61,10 @@ $model = new Models();
                 <div class="small mb-1">PEF-<?php echo $productData['id']; ?></div>
                 <h1 class="display-5 fw-bolder"><?php echo $productData["product_name"]; ?></h1>
                 <div class="fs-5 mb-5">
-                    <span class="text-decoration-line-through"><?php echo  $productData['product_price'];?></span>
-                    <span><?php if($productData['discount'] > 0 ){ echo $productData['product_price'] - ($productData['discount']*$productData['product_price'])/100;}else{ echo  $productData['product_price'];}; ?></span>
+                    <span><?php if($productData['discount'] > 0 ){?>
+                        <span class="text-decoration-line-through"><?php echo  $productData['product_price'];?></span>
+                        <span><?php echo $productData['product_price'] - ($productData['discount']*$productData['product_price'])/100; ?></span>
+                        <?php }else{echo  $productData['product_price'];}; ?></span>
                 </div>
                 <p class="lead"><?php echo $productData['description']; ?></p>
                 <div class="d-flex">

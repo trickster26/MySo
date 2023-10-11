@@ -1,5 +1,6 @@
 <?php include('./navbar.php');
 include('../config/constant.php');
+
 if (!isset($_SESSION['login_user'])) {
 	header("location:" . URL);
 	exit();
