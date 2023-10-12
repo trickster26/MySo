@@ -24,8 +24,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_SESSION["id"];
     $address = [$street, $postel, $country, $state, $city];
 
-    // *Check if file is uploaded or not*
-    if (!empty($_FILES['profile-Image']['tmp_name'])) {
+
+// Define error variables
+$errors = array();
+
+// Validate First Name
+if (empty($_POST['first_name'])) {
+    $errors['first_name'] = 'First name is required';
+}
+
+// Validate Last Name
+if (empty($_POST['last_name'])) {
+    $errors['last_name'] = 'Last name is required';
+}
+
+// Validate Email Address
+if (empty($_POST['email'])) {
+    $errors['email'] = 'Email address is required';
+} elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Invalid email address';
+}
+
+// Validate Mobile Number
+if (empty($_POST['phone'])) {
+    $errors['phone'] = 'Mobile number is required';
+} elseif (!preg_match("/^[0-9]{10}$/", $_POST['phone'])) {
+    $errors['phone'] = 'Invalid mobile number';
+}
+
+// Validate Date of Birth
+if (empty($_POST['birthday'])) {
+    $errors['birthday'] = 'Date of birth is required';
+}
+
+// Validate Hobbies (at least one must be selected)
+if (empty($_POST['hobbies'])) {
+    $errors['hobbies'] = 'Please select at least one hobby';
+}
+
+// Validate Gender
+if (empty($_POST['gender'])) {
+    $errors['gender'] = 'Gender is required';
+}
+
+// Validate Address Fields (Country, State, City, Street, and PIN CODE)
+if (empty($_POST['country']) || empty($_POST['state']) || empty($_POST['city']) || empty($_POST['street']) || empty($_POST['pin'])) {
+    $errors['address'] = 'All address fields are required';
+}
+
+// Validate Nationality
+if (empty($_POST['nationality'])) {
+    $errors['nationality'] = 'Nationality is required';
+}
+
+// Validate Monthly Income
+if (empty($_POST['monthly_income'])) {
+    $errors['monthly_income'] = 'Monthly income is required';
+} elseif (!is_numeric($_POST['monthly_income'])) {
+    $errors['monthly_income'] = 'Monthly income must be a number';
+}
+
+if (empty($errors)) {
+     // *Check if file is uploaded or not*
+     if (!empty($_FILES['profile-Image']['tmp_name'])) {
 
         // *File Upload Handling*
         $targetDirectory = '../../assets/images/uploads/'. $id . '/'; 
@@ -81,6 +142,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             }
     }
+
+    // Redirect to a success page
+    header('Location: success.php');
+    exit;
+}else{
+    $_SESSION['edit-error'] = $error;
+    header("location:http://localhost:8000/templates/edit-user.php");
+}
+
+
+
+   
 
 }
 ?>

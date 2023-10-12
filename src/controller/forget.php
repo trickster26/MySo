@@ -1,5 +1,5 @@
 <?php session_start();
-include('/var/www/html/php/form_handling/config/connection.php'); ?>
+include('/var/www/html/php/MySo/config/connection.php'); ?>
 <?php
 
 include_once(__DIR__ . '/../../config/constant.php');
