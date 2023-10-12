@@ -1,4 +1,4 @@
-<?php include('/var/www/html/php/form_handling/config/connection.php'); ?>
+<?php include('/var/www/html/php/MySo/config/connection.php'); ?>
 <?php
 if (isset($_GET["key"]) && isset($_GET["email"]) && isset($_GET["action"]) 
 && ($_GET["action"]=="reset") && !isset($_POST["action"])){

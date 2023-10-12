@@ -1,5 +1,6 @@
 <?php include('./navbar.php');
 include('../config/constant.php');
+
 if (!isset($_SESSION['login_user'])) {
 	header("location:" . URL);
 	exit();
@@ -121,14 +122,14 @@ if (!isset($_SESSION['login_user'])) {
   </div>
 </div><br>
 
- <!-- File Button --> 
+<!-- File Button -->
 <div class="form-group ">
   <label class="col-md-4 control-label" for="filebutton">main_image:</label>
   <div class="col-md-4">
-    <input id="filebutton" name="filebutton" class="input-file" type="file">
+    <input id="filebutton" name="filebutton" class="input-file" type="file" onchange="previewImage(this, 'main_image_preview')">
+    <div id="main_image_preview"></div>
   </div>
 </div><br>
-
 
 <!-- File Button -->
 <div class="form-group d-flex">
@@ -145,12 +146,7 @@ if (!isset($_SESSION['login_user'])) {
   <div class="col-md-4">
     <button id="singlebutton" name="singlebutton" class="btn btn-primary">Button</button>
   </div>
-  </div><br>
-</fieldset>
-</form>
-    </div>
-</div>
-
+</div><br>
 
 <script>
   function insertAtCursor() {
@@ -163,14 +159,34 @@ if (!isset($_SESSION['login_user'])) {
         altContainer.removeChild(altContainer.firstChild);
       }
 
-      // Create and append new input elements
+      // Create and append new input elements with preview divs
       for (let i = 1; i <= num; i++) {
         let input = document.createElement("input");
         input.setAttribute("name", `alt${i}`);
         input.setAttribute("type", "file");
         input.setAttribute("class", "input-file");
+        input.setAttribute("onchange", `previewImage(this, 'alt${i}_preview')`);
+
+        let previewDiv = document.createElement("div");
+        previewDiv.setAttribute("id", `alt${i}_preview`);
         altContainer.appendChild(input);
+        altContainer.appendChild(previewDiv);
       }
+    }
+  }
+
+  function previewImage(input, previewId) {
+    let preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+      let reader = new FileReader();
+
+      reader.onload = function (e) {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Preview" width="100"/>`;
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.innerHTML = "";
     }
   }
 </script>

@@ -1,5 +1,10 @@
-<?php include('/var/www/html/php/form_handling/config/connection.php'); ?>
-<?php
+<?php include('/var/www/html/php/MySo/config/connection.php'); ?> 
+
+<?php 
+
+// echo "ANU";
+// var_dump($conn);
+
 class Models
 {
     function __construct()

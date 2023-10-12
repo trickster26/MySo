@@ -27,7 +27,10 @@
         </li>
         <?php if (isset($_SESSION["login_user"])){ ?>
         <li class="nav-item">
-          <a class="nav-link" href="http://localhost:8000/templates/add-product.php">ADD Product</a>
+          <a class="nav-link" href="http://localhost:8000/templates/add-product.php">Add Product</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:8000/templates/my-products.php">My Products</a>
         </li>
         <?php } ?>
         <li class="nav-item">
