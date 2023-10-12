@@ -357,6 +357,7 @@ include("./navbar.php");
 			return phonePattern.test(phone);
 
 		}
+		//  kj
 
 		// Function to validate a date format
 		function isValidDate(date) {
