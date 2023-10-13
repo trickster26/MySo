@@ -57,12 +57,19 @@ include("./navbar.php");
 <div class="alert alert-danger">
     <strong>Error!</strong> Please fix the following issues:
     <ul>
-        <?php foreach ($errors as $error){ ?>
+        <?php foreach ($_SESSION['edit-error'] as $error){ ?>
             <li><?php echo $error; ?></li>
         <?php } ?>
     </ul>
 </div>
-<?php unset($_SESSION['edit-error']); } ?>
+<?php unset($_SESSION['edit-error']); }
+// checking if the profile is updated or not
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success">' . $_SESSION['success_message'] . ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div>';
+    unset($_SESSION['success_message']);
+}
+
+?>
 
 <style>
 .invalid-feedback {
@@ -96,18 +103,27 @@ include("./navbar.php");
 										<input style="text-align:center;" value="<?php echo $_SESSION['id']; ?>/<?php echo $_SESSION['image']; ?>.<?php echo $_SESSION['extension']; ?>" type="file" name="profile-Image" id="input">
 									</div>
 								</div>
+								<div class="row mt-3">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="form-group">
+    										<br>
+    										<input id="delete" type="checkbox" name="delete_image" value="1"> <label for="delete" class="profile_details_text">Delete Profile Image</label>
+										</div>
+									</div>
+								</div>
 							<?php } ?>
 
 						</fieldset>
 					</div>
 				</div>
 			</div>
+			
 			<div class="row mt-3">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<div class="form-group">
 						<label class="profile_details_text">First Name:</label>
 						<input type="text" name="first_name" class="form-control" value="<?php echo $_SESSION['login_user']; ?>">
-						<div class="invalid-feedback"></div>
+						<div class="invalid-feedback"  ></div>
 					</div>
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -178,7 +194,8 @@ include("./navbar.php");
 						<input id="science" type="checkbox" name="subject[]" value="science" <?php if (in_array('science', $exist)) { ?> checked <?php } ?> /> <label for="science">Science</label><br>
 						<input type="checkbox" name="subject[]" value="english" <?php if (in_array('english', $exist)) { ?> checked <?php } ?> id="english" /> <label for="english">English</label><br>
 						<input type="checkbox" name="subject[]" value="hindi" <?php if (in_array('hindi', $exist)) { ?> checked <?php } ?> id="hindi" /> <label for="hindi">Hindi</label> <br>
-						<input type="checkbox" name="subject[]" value="social" <?php if (in_array('social', $exist)) { ?> checked <?php } ?> id="social" /> <label for="social">Social Studies</label>
+						<input type="checkbox" name="subject[]" value="social" <?php if (in_array('social', $exist)) { ?> checked <?php } ?> id="social" /> <label for="social">Social Studies</label><br>
+						<div class="invalid-feedback subject"></div>
 					</div>
 				</div>
 			</div>
@@ -208,6 +225,7 @@ include("./navbar.php");
 					<div class="form-group">
 						<label for="street">Street Address</label><br>
 						<input id="street" value="<?php echo $addreesss["street"] ?>" class="form-control" name="street" type="text">
+						<div class="invalid-feedback"></div>
 					</div>
 				</div>
 			</div>
@@ -215,7 +233,8 @@ include("./navbar.php");
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="form-group">
 						<label for="postel">PIN CODE:</label><br>
-						<input id="postel" value="<?php echo $addreesss["pin"] ?>" class="form-control" name="pin" type="text">
+						<input id="postel" value="<?php echo $addreesss["pin"] ?>" class="form-control" name="pin" type="number">
+						<div class="invalid-feedback"></div>
 					</div>
 				</div>
 			</div>
@@ -255,7 +274,8 @@ include("./navbar.php");
 		event.preventDefault();
 
 		// Reset any previous error messages
-		// resetErrors();
+		resetErrors();
+
 
 		// Get form input values
 		const firstName = document.querySelector("input[name='first_name']").value.trim();
@@ -263,15 +283,41 @@ include("./navbar.php");
 		const email = document.querySelector("input[name='email']").value.trim();
 		const phone = document.querySelector("input[name='phone']").value.trim();
 		const birthday = document.querySelector("input[name='birthday']").value;
+		const street = document.querySelector("input[name='street']").value.trim();
 		const pin = document.querySelector("input[name='pin']").value.trim();
+		const nationality = document.querySelector("input[name='nationality']").value.trim();
+		const hobbies =  document.querySelector("select[name='hobbies[]'").value;
+		const gender = document.querySelector("input[name='gender']").value;
+		const subjectCheckboxes = document.querySelectorAll("input[name='subject[]']");
+		const selectedSubjects = Array.from(subjectCheckboxes).filter(checkbox => checkbox.checked);
 		const monthlyIncome = document.querySelector("input[name='monthly_income']").value.trim();
 
 		// Perform form validation
 		let hasErrors = false;
 
+	
+
 		// Validate first name
 		if (!firstName) {
 			displayError("first_name", "First Name is required.");
+			hasErrors = true;
+		}
+
+		// validate subject
+		if (selectedSubjects.length === 0) {
+			displaySubjectError("Please select at least one favorite subject.")
+    		hasErrors = true;
+		}
+
+		// gender validation
+		if (!gender){
+			displayError("gender","Gender required");
+			hasErrors = true;
+		}
+
+		// Validate hobbies
+		if(!hobbies) {
+			displayError('hobbies[]', 'Hobbies are required');
 			hasErrors = true;
 		}
 
@@ -305,6 +351,7 @@ include("./navbar.php");
 			hasErrors = true;
 		}
 
+		// validate age
 		const today = new Date();
 		const dobDate = new Date(birthday);
 		const age = today.getFullYear() - dobDate.getFullYear();
@@ -313,10 +360,26 @@ include("./navbar.php");
 			hasErrors = true;
 		}
 
-		if (pin.length > 6 && pin.length < 6){
-			displayError("pin", "Enter a valid PIN CODE.");
+		// validate pin
+		console.log(pin);
+		console.log(typeof(pin));
+		if (!/^\d{6}$/.test(pin)) {
+    		displayError("pin", "Enter a valid 6-digit PIN CODE.");
+    		hasErrors = true;
+		}
+
+		// validate street
+		if (!street){
+			displayError("street","Enter Street Address");
 			hasErrors = true;
 		}
+
+		//  validate nationality
+		if (!nationality){
+			displayError("nationality","Enter Nationality");
+			hasErrors = true;
+		}
+
 
 		// Validate monthly income
 		if (!isValidMonthlyIncome(monthlyIncome)) {
@@ -326,7 +389,7 @@ include("./navbar.php");
 
 		// If there are no errors, submit the form
 		if (!hasErrors) {
-			this.submit(); // Submit the form
+			this.submit();
 		}
 	});
 
@@ -337,6 +400,11 @@ include("./navbar.php");
 				element.textContent = "";
 			})
 		}
+		// Function to display an error message for the "Subjects" checkboxes
+	function displaySubjectError(message) {
+    	const errorElement = document.querySelector(".invalid-feedback.subject"); 
+    	errorElement.textContent = message;
+	}
 
 		// Function to display an error message for a specific field
 		function displayError(fieldName, message) {

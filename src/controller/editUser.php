@@ -86,7 +86,24 @@ if (empty($_POST['monthly_income'])) {
 
 if (empty($errors)) {
      // *Check if file is uploaded or not*
-     if (!empty($_FILES['profile-Image']['tmp_name'])) {
+     // Check if the "Delete Profile Image" checkbox is selected
+    if (isset($_POST['delete_image']) && $_POST['delete_image'] == 1) {
+        // Delete the existing profile image if it exists
+        if (isset($_SESSION['image'])) {
+        // Define the path to the profile image and remove it from the file system
+            $imagePath = '../../assets/images/uploads/' . $_SESSION['id'] . '/' . $_SESSION['image'] . '.' . $_SESSION['extension'];
+                if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+        // Remove image-related session variables
+            unset($_SESSION['image']);
+            unset($_SESSION['extension']);
+            $_SESSION['success_message'] = 'Your profile has been updated successfully.';
+            header("Location: http://localhost:8000/templates/edit-user.php");
+            exit;
+        }
+    }else if (!empty($_FILES['profile-Image']['tmp_name'])) {
 
         // *File Upload Handling*
         $targetDirectory = '../../assets/images/uploads/'. $id . '/'; 
@@ -106,7 +123,8 @@ if (empty($errors)) {
         // *Image Validation*
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
         if (getimagesize($_FILES["profile-Image"]["tmp_name"]) === false || !in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-            echo "Invalid image file.";
+            $_SESSION['edit-error'] = ["Invalid image file."];
+            header("location:http://localhost:8000/templates/edit-user.php");
             exit();
         }
         // *Move the uploaded file to the desired directory and sending form data to Model*
@@ -121,7 +139,8 @@ if (empty($errors)) {
             $status = $model->Model_Edit($first_name, $last_name, $email, $phone, $_POST["birthday"], $gender, $nationality, $imageFile, $income);
 
             if($status && $subject_status && $hobbie_status && $address_status){
-                header("Location:http://localhost:8000/");
+                $_SESSION['success_message'] = 'Your profile has been updated successfully.';
+                header("Location:http://localhost:8000/templates/edit-user.php");
                 exit;
             }
         } 
@@ -138,7 +157,8 @@ if (empty($errors)) {
            
             $status = $model->Model_Edit($first_name, $last_name, $email, $phone, $_POST["birthday"], $gender, $nationality, $imageFile, $income);
             if($status && $subject_status && $hobbie_status && $address_status){
-                header("Location: http://localhost:8000/");
+                $_SESSION['success_message'] = 'Your profile has been updated successfully.';
+                header("Location: http://localhost:8000/templates/edit-user.php");
                 exit;
             }
     }
