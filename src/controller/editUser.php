@@ -167,7 +167,7 @@ if (empty($errors)) {
     header('Location: success.php');
     exit;
 }else{
-    $_SESSION['edit-error'] = $error;
+    $_SESSION['edit-error'] = $errors;
     header("location:http://localhost:8000/templates/edit-user.php");
 }
 

@@ -52,6 +52,7 @@ while ($rowe = mysqli_fetch_assoc($ress)) {
 
 
 include("./navbar.php");
+
 ?>
 <?php if (isset($_SESSION['edit-error'])){ ?>
 <div class="alert alert-danger">

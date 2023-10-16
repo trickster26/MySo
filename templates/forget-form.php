@@ -58,7 +58,7 @@ include('navbar.php');
 		
 		<p>Look like you're lost</p>
 		
-		<a href="" class="link_404">Go to Home</a>
+		<a href="http://localhost:8000/src/controller/forget.php" class="link_404">Re-Enter Email</a>
 	</div>
 		</div>
 		</div>

@@ -2,6 +2,10 @@
 // include('././../config/constant.php');
 include('../config/constant.php');
 include('./navbar.php'); 
+if (isset($_SESSION['id'])) {
+  header("Location: http://localhost:8000/index.php");
+  exit;
+}
 
 ?>
 
@@ -23,24 +27,31 @@ include('./navbar.php');
             name="email"
             placeholder="Full Name"
             require
+            value="<?php echo isset($_COOKIE['remember_email']) ? $_COOKIE['remember_email'] : ''; ?>"
           />
         </div>
 
 
         <div class="form-group" id="password-group">
           <label for="password">Password</label>
-          <input type="text" placeholder="**********" id="password" name="password" class="form-control">
+          <div class="d-flex ">
+          <input type="password" placeholder="**********" id="password" name="password"  class="form-control" value="<?php echo isset($_COOKIE['remember_password']) ? $_COOKIE['remember_password'] : ''; ?>">
+          <i style="margin-left: -30px; margin-top: 7px;" class="bi bi-eye-slash " id="togglePassword"></i>
+          </div>
+          
         </div>
-
+        <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me" <?php echo isset($_COOKIE['remember_me']) ? 'checked' : ''; ?>>
+        <label class="form-check-label" for="remember_me">Remember Me</label>
+    <div>
         <button type="submit" class="btn btn-success mt-4">
           Login
         </button>
         <a href="http://localhost:8000/src/controller/forget.php" class="btn btn-outline-warning mt-4">Forgot Password</a>
+        </div>
       </form>
     </div>
 
     <script>
-
       document.getElementById("signup-form").addEventListener("submit", function (event) {
       // Prevent the form from submitting initially
       event.preventDefault();
@@ -86,7 +97,20 @@ include('./navbar.php');
         errorMessage.remove();
         });
       }
+      // Eye show password
+      const togglePassword = document.querySelector("#togglePassword");
+      const password = document.querySelector("#password");
 
+      togglePassword.addEventListener("click", function () {
+   
+      // toggle the type attribute
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+      // toggle the eye icon
+      this.classList.toggle('bi-eye');
+      this.classList.toggle('bi-eye-slash');
+});
+    
 </script>
 
 <?php include("./footer.php"); ?>

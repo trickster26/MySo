@@ -82,9 +82,9 @@ if(isset($_POST["email"]) && (!empty($_POST["email"]))){
       if(!$mail->Send()){
          echo "Mailer Error: " . $mail->ErrorInfo;
       }else{
-         echo "<div class='error'>
-         <p>An email has been sent to you with instructions on how to reset your password.</p>
-         </div><br /><br /><br />";
+         $_SESSION["email-success"] = "An email has been sent to you with instructions on how to reset your password.";
+         header("location:http://localhost:8000/templates/success-template.php");
+         
       }
    }
 }else{

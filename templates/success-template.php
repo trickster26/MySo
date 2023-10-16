@@ -1,6 +1,7 @@
-<?php include("navbar.php"); 
+<?php include("./navbar.php"); 
 // include('././../config/constant.php');
 include('../config/constant.php');
+
 ?>
 <style>
 
@@ -146,6 +147,7 @@ background-image: linear-gradient(to bottom right,#02b3e4,#02ccba);
 	
 }
 </style>
+
 <div class="contain">
 	<div class="congrats">
 		<h1>Congrat<span class="hide">ulation</span>s !</h1>
@@ -153,12 +155,19 @@ background-image: linear-gradient(to bottom right,#02b3e4,#02ccba);
         <img src="https://64.media.tumblr.com/762e40897d93618393867de1fa19f162/tumblr_n1g3mwPVEP1qdezf9o1_500.gifv" alt="">
 
 		<div class="text">
-		<p>You have successfully Changed the password. <br>
-        Please login with your new Password.</p><hr/>
-        <a class="btn btn-outline-success" href="http://localhost:8000/templates/login.php">Login Now</a>
+			<?php if (isset( $_SESSION["email-success"])){ ?>
+				<p><?php echo $_SESSION["email-success"]; ?></p><hr/>
+		
+				
+				<?php unset( $_SESSION["email-success"]);
+
+			}else if(isset($_SESSION['success-change'])){ ?>
+		<p><?php echo $_SESSION['success-change']; ?></p><hr/>
+        
 		</p>
+		<?php unset($_SESSION['success-change']); } ?>
+		<a class="btn btn-outline-success" href="http://localhost:8000/templates/login.php">Login Now</a>
 			</div>
-	
 	</div>
 </div>
 <script>
