@@ -17,7 +17,7 @@ if (isset($_SESSION['id'])) {
         unset($_SESSION["error_message"]); 
     }
 ?>
-      <form id="signup-form" action="<?php echo URL ?>/src/controller/login.php" method="post">
+      <form id="signin-form" action="<?php echo URL ?>/src/controller/login.php" method="post">
         <div id="name-group" class="form-group">
           <label for="name">Email</label>
           <input
@@ -52,17 +52,15 @@ if (isset($_SESSION['id'])) {
     </div>
 
     <script>
-      document.getElementById("signup-form").addEventListener("submit", function (event) {
-      // Prevent the form from submitting initially
+
+      // Start of validations
+      document.getElementById("signin-form").addEventListener("submit", function (event) {
       event.preventDefault();
 
-      // Reset any previous error messages
       clearErrors();
 
-      // Get form input values
       const name = document.getElementById("name").value.trim();
       const password = document.getElementById("password").value.trim();
-      // Perform form validation
       let hasErrors = false;
 
       if (!name) {
@@ -75,9 +73,9 @@ if (isset($_SESSION['id'])) {
         hasErrors = true;
       }
 
-      // If there are no errors, submit the form
+      // If there are no error submit the form
       if (!hasErrors) {
-        this.submit(); // Submit the form
+        this.submit();
         }
       });
 
