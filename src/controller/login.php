@@ -56,10 +56,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
       exit();
     }else{
       $_SESSION['previous_email'] = $email;
-    $_SESSION['previous_remember_me'] = isset($_POST['remember_me']);
+      $_SESSION['previous_remember_me'] = isset($_POST['remember_me']);
       $_SESSION["error_message"] = "Invalid username or password.";
-        header("Location: http://localhost:8000/templates/login.php");
-        exit();
+      header("Location: http://localhost:8000/templates/login.php");
+      exit();
     }
     
 }

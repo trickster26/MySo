@@ -23,6 +23,33 @@ class SignUp extends Models {
             $email = htmlentities($_POST['email']);
             $phone = $_POST['phone'];
             $password = htmlentities($_POST['password']);
+            // Validate Name
+    if (empty($name)) {
+        $errors['name'] = 'Name is required.';
+    }
+
+    // Validate Email
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Invalid email address.';
+    }
+
+    // Validate Phone
+    if (empty($phone) || !preg_match('/^\d{10}$/', $phone)) {
+        $errors['phone'] = 'Invalid phone number (10 digits required).';
+    }
+
+    // Validate Password (you can add more rules here)
+    if (empty($password)) {
+        $errors['password'] = 'Password is required.';
+    }
+
+    // If there are no errors, proceed with registration
+    if (!empty($errors)) {
+        $_SESSION['errors'] = $errors;
+        header("Location:http://localhost:8000/templates/signup.php");
+        exit;
+    }
+
 
 
             // Coverting normal password String into SHA256 digest

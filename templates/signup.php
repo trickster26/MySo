@@ -1,12 +1,16 @@
 <?php 
 include('./navbar.php'); 
-// include('././../config/constant.php');
 include('../config/constant.php');
 if (isset($_SESSION['login_user'])) {
 	header("location:" . URL);
 	exit();
 }
 ?>
+<style>
+  .error{
+    color: red;
+  }
+</style>
 
 <div style="height: 60vh;" class="col-sm-6 col-sm-offset-3 mt-5 mx-auto">
       <form id="signup-form" action="<?php echo URL ?>/src/controller/SignUp.php" method="post">
@@ -19,6 +23,9 @@ if (isset($_SESSION['login_user'])) {
             name="name"
             placeholder="Full Name"
           />
+          <?php if (isset($_SESSION['errors']['name'])) { ?>
+            <div class="error"><?php echo $_SESSION['errors']['name']; ?></div>
+        <?php } ?>
         </div>
 
         <div id="email-group" class="form-group">
@@ -30,6 +37,9 @@ if (isset($_SESSION['login_user'])) {
             name="email"
             placeholder="email@example.com"
           />
+          <?php if (isset($_SESSION['errors']['email'])) { ?>
+            <div class="error"><?php echo $_SESSION['errors']['email']; ?></div>
+        <?php } ?>
         </div>
 
         <div id="superhero-group" class="form-group">
@@ -41,11 +51,17 @@ if (isset($_SESSION['login_user'])) {
             name="phone"
             placeholder="9876543210"
           />
+          <?php if (isset($_SESSION['errors']['phone'])) { ?>
+            <div class="error"><?php echo $_SESSION['errors']['phone']; ?></div>
+        <?php } ?>
         </div>
 
         <div class="form-group" id="password-group">
           <label for="password">Password</label>
           <input type="text" placeholder="**********" id="password" name="password" class="form-control">
+          <?php if (isset($_SESSION['errors']['password'])) { ?>
+            <div class="error"><?php echo $_SESSION['errors']['password']; ?></div>
+        <?php } ?>
         </div>
 
         <button type="submit" class="btn btn-success mt-4">
@@ -53,6 +69,7 @@ if (isset($_SESSION['login_user'])) {
         </button>
       </form>
     </div>
+    <?php if(isset($_SESSION['errors'])){unset($_SESSION['errors']);} ?>
 
     <script>
 
