@@ -16,13 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $income = $_POST["monthly_income"];
     $hobbies = $_POST["hobbies"];
     $subject = $_POST["subject"];
-    $street = $_POST["street"];
-    $postel = $_POST["pin"];
-    $country = $_POST["country"];
-    $state = $_POST["state"];
-    $city = $_POST["city"];
+    
     $id = $_SESSION["id"];
-    $address = [$street, $postel, $country, $state, $city];
+    
 
 
 // Define error variables
@@ -68,9 +64,9 @@ if (empty($_POST['gender'])) {
 }
 
 // Validate Address Fields (Country, State, City, Street, and PIN CODE)
-if (empty($_POST['country']) || empty($_POST['state']) || empty($_POST['city']) || empty($_POST['street']) || empty($_POST['pin'])) {
-    $errors['address'] = 'All address fields are required';
-}
+// if (empty($_POST['country']) || empty($_POST['state']) || empty($_POST['city']) || empty($_POST['street']) || empty($_POST['pin'])) {
+//     $errors['address'] = 'All address fields are required';
+// }
 
 // Validate Nationality
 if (empty($_POST['nationality'])) {
@@ -131,7 +127,7 @@ if (empty($errors)) {
         if (move_uploaded_file($tempFile, $targetFile)) {
             $model = new Models();
             $subject_status = $model -> Insert($subject,'subject',['subject', 'user_id']);
-            $address_status = $model -> Insert($address,'address', ['street_address','pin_code', 'country', 'state', 'city']);
+            
             
             $hobbie_status = $model -> Insert($hobbies,'hobbies',['hobbies','user_id']);
             
@@ -149,23 +145,17 @@ if (empty($errors)) {
             // *No file was uploaded, set the default profile image URL*
             $model = new Models();
             $subject_status = $model -> Insert($subject,'subject',['subject', 'user_id']);
-            $address_status = $model -> Insert($address,'address', ['street_address','pin_code', 'country', 'state', 'city']);
-            
             $hobbie_status = $model -> Insert($hobbies,'hobbies',['hobbies','user_id']);
             
             
            
             $status = $model->Model_Edit($first_name, $last_name, $email, $phone, $_POST["birthday"], $gender, $nationality, $imageFile, $income);
-            if($status && $subject_status && $hobbie_status && $address_status){
+            if($status && $subject_status && $hobbie_status){
                 $_SESSION['success_message'] = 'Your profile has been updated successfully.';
                 header("Location: http://localhost:8000/templates/edit-user.php");
                 exit;
             }
     }
-
-    // Redirect to a success page
-    header('Location: success.php');
-    exit;
 }else{
     $_SESSION['edit-error'] = $errors;
     header("location:http://localhost:8000/templates/edit-user.php");

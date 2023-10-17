@@ -1,9 +1,5 @@
 <?php
-
-use Google\Service\CloudSearch\Id;
-
-session_start();
-// include('././../config/constant.php');
+include("./navbar.php");
 include('../config/constant.php');
 include('../config/connection.php');
 
@@ -51,7 +47,7 @@ while ($rowe = mysqli_fetch_assoc($ress)) {
 };
 
 
-include("./navbar.php");
+
 
 ?>
 <?php if (isset($_SESSION['edit-error'])){ ?>
@@ -183,8 +179,9 @@ if (isset($_SESSION['success_message'])) {
 
 						<input type="radio" <?php if ($gender == "Male") { ?> checked <?php } ?> id="male" name="gender" value="Male"></input><label for="male">Male</label>
 						<input type="radio" <?php if ($gender == "Female") { ?> checked <?php } ?> id="female" name="gender" value="Female"></input><label for="female">Female</label>
-						<div class="invalid-feedback"></div>
+						<div class="invalid-feedback gender"></div>
 					</div>
+					
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -200,50 +197,12 @@ if (isset($_SESSION['success_message'])) {
 					</div>
 				</div>
 			</div>
-			<div class="row mt-3">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group">
-						<label for="">Address: </label><br><br>
-						<label for="country">Country:</label><br>
-						<select name="country" id="country" onchange="fetchStates()">
-							<option value="<?php echo $addreesss["country"] ?>">Select Country</option><br>
-						</select><br>
-
-						<label for="state">State:</label><br>
-						<select name="state" id="state" onchange="fetchCities()">
-							<option value="">Select State</option><br>
-						</select><br>
-
-						<label for="city">City:</label><br>
-						<select name="city" id="city">
-							<option value="">Select City</option><br>
-						</select><br>
-					</div>
-				</div>
-			</div>
-			<div class="row mt-3">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group">
-						<label for="street">Street Address</label><br>
-						<input id="street" value="<?php echo $addreesss["street"] ?>" class="form-control" name="street" type="text">
-						<div class="invalid-feedback"></div>
-					</div>
-				</div>
-			</div>
-			<div class="row mt-3">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group">
-						<label for="postel">PIN CODE:</label><br>
-						<input id="postel" value="<?php echo $addreesss["pin"] ?>" class="form-control" name="pin" type="number">
-						<div class="invalid-feedback"></div>
-					</div>
-				</div>
-			</div>
+			
 			<div class="row mt-3">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="form-group">
 						<label class="profile_details_text">Nationality:</label>
-						<input type="text" name="nationality" class="form-control" value="<?php echo $_SESSION['nationality']; ?>">
+						<input type="text" id="nationality" name="nationality" class="form-control" value="<?php echo $_SESSION['nationality']; ?>">
 						<div class="invalid-feedback"></div>
 					</div>
 				</div>
@@ -256,7 +215,7 @@ if (isset($_SESSION['success_message'])) {
 						<div class="invalid-feedback"></div>
 					</div>
 				</div>
-				<div class="invalid-feedback"></div>
+				
 			</div>
 			<div class="row mt-3">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 submit">
@@ -284,11 +243,11 @@ if (isset($_SESSION['success_message'])) {
 		const email = document.querySelector("input[name='email']").value.trim();
 		const phone = document.querySelector("input[name='phone']").value.trim();
 		const birthday = document.querySelector("input[name='birthday']").value;
-		const street = document.querySelector("input[name='street']").value.trim();
-		const pin = document.querySelector("input[name='pin']").value.trim();
-		const nationality = document.querySelector("input[name='nationality']").value.trim();
+		const nationality = document.getElementById("nationality").value.trim();
+		console.log("nationality: ",nationality);
 		const hobbies =  document.querySelector("select[name='hobbies[]'").value;
-		const gender = document.querySelector("input[name='gender']").value;
+		const gender = document.querySelector("input[name='gender']:checked");
+
 		const subjectCheckboxes = document.querySelectorAll("input[name='subject[]']");
 		const selectedSubjects = Array.from(subjectCheckboxes).filter(checkbox => checkbox.checked);
 		const monthlyIncome = document.querySelector("input[name='monthly_income']").value.trim();
@@ -304,6 +263,12 @@ if (isset($_SESSION['success_message'])) {
 			hasErrors = true;
 		}
 
+		// Validate nationality
+		if(!nationality) {
+			displayError("nationality","Enter Nationality.");
+			hasErrors = true;
+		}
+
 		// validate subject
 		if (selectedSubjects.length === 0) {
 			displaySubjectError("Please select at least one favorite subject.")
@@ -312,7 +277,7 @@ if (isset($_SESSION['success_message'])) {
 
 		// gender validation
 		if (!gender){
-			displayError("gender","Gender required");
+			displayGenderError("Gender required");
 			hasErrors = true;
 		}
 
@@ -361,25 +326,8 @@ if (isset($_SESSION['success_message'])) {
 			hasErrors = true;
 		}
 
-		// validate pin
-		console.log(pin);
-		console.log(typeof(pin));
-		if (!/^\d{6}$/.test(pin)) {
-    		displayError("pin", "Enter a valid 6-digit PIN CODE.");
-    		hasErrors = true;
-		}
 
-		// validate street
-		if (!street){
-			displayError("street","Enter Street Address");
-			hasErrors = true;
-		}
 
-		//  validate nationality
-		if (!nationality){
-			displayError("nationality","Enter Nationality");
-			hasErrors = true;
-		}
 
 
 		// Validate monthly income
@@ -405,6 +353,11 @@ if (isset($_SESSION['success_message'])) {
 	function displaySubjectError(message) {
     	const errorElement = document.querySelector(".invalid-feedback.subject"); 
     	errorElement.textContent = message;
+	}
+
+	function displayGenderError(message) {
+		const errorElement = document.querySelector(".invalid-feedback.gender");
+		errorElement.textContent = message; 
 	}
 
 		// Function to display an error message for a specific field
@@ -438,122 +391,7 @@ if (isset($_SESSION['success_message'])) {
 			return !isNaN(income) && parseFloat(income) > 0;
 		}
 
-		// Replace with your API endpoint and key
-		const apiEndpoint = 'https://api.countrystatecity.in/v1/';
-		const apiKey = 'MkRudWJaQnFEblM2ck9hYkRpTVhZbElSUGZUS2NmZ0VwVktnY1o1NQ==';
 
-		// Function to fetch countries and populate the country dropdown
-		async function fetchCountries() {
-			const countrySelect = document.getElementById('country');
-			countrySelect.innerHTML = '<option value="">Loading...</option>';
-
-			try {
-				const response = await fetch(apiEndpoint + 'countries', {
-					headers: {
-						'X-CSCAPI-KEY': apiKey,
-					},
-				});
-				const data = await response.json();
-
-				countrySelect.innerHTML = '<option value=""><?php if (isset($addreesss["country"])) {
-																echo $addreesss["country"];
-															} else { ?>Select Country<?php } ?></option>';
-				data.forEach(country => {
-					const option = document.createElement('option');
-					option.value = country.iso2;
-					option.textContent = country.name;
-					countrySelect.appendChild(option);
-				});
-			} catch (error) {
-				console.error('Error fetching countries:', error);
-			}
-		}
-
-		// Function to fetch states based on the selected country
-		async function fetchStates() {
-			const countrySelect = document.getElementById('country');
-			const stateSelect = document.getElementById('state');
-			const citySelect = document.getElementById('city');
-
-			const selectedCountry = countrySelect.value;
-
-			if (selectedCountry) {
-				stateSelect.innerHTML = '<option value="">Loading...</option>';
-				citySelect.innerHTML = '<option value=""><?php if (isset($addreesss["city"])) {
-																echo $addreesss["city"];
-															} else { ?>Select City<?php } ?></option>';
-
-				try {
-					const response = await fetch(apiEndpoint + `countries/${selectedCountry}/states`, {
-						headers: {
-							'X-CSCAPI-KEY': apiKey,
-						},
-					});
-					const data = await response.json();
-
-					stateSelect.innerHTML = '<option value=""><?php if (isset($addreesss["state"])) {
-																	echo $addreesss["state"];
-																} else { ?>Select State<?php } ?></option>';
-					data.forEach(state => {
-						const option = document.createElement('option');
-						option.value = state.iso2;
-						option.textContent = state.name;
-						stateSelect.appendChild(option);
-					});
-				} catch (error) {
-					console.error('Error fetching states:', error);
-				}
-			} else {
-				stateSelect.innerHTML = '<option value=""><?php if (isset($addreesss["state"])) {
-																echo $addreesss["state"];
-															} else { ?>Select State<?php } ?></option>';
-				citySelect.innerHTML = '<option value=""><?php if (isset($addreesss["city"])) {
-																echo $addreesss["city"];
-															} else { ?>Select City<?php } ?></option>';
-			}
-		}
-
-		// Function to fetch cities based on the selected state
-		async function fetchCities() {
-			const countrySelect = document.getElementById('country');
-			const stateSelect = document.getElementById('state');
-			const citySelect = document.getElementById('city');
-
-			const selectedCountry = countrySelect.value;
-			const selectedState = stateSelect.value;
-
-			if (selectedCountry && selectedState) {
-				citySelect.innerHTML = '<option value="">Loading...</option>';
-
-				try {
-					const response = await fetch(apiEndpoint + `countries/${selectedCountry}/states/${selectedState}/cities`, {
-						headers: {
-							'X-CSCAPI-KEY': apiKey,
-						},
-					});
-					const data = await response.json();
-
-					citySelect.innerHTML = '<option value=""><?php if (isset($addreesss["city"])) {
-																	echo $addreesss["city"];
-																} else { ?>Select City<?php } ?></option>';
-					data.forEach(city => {
-						const option = document.createElement('option');
-						option.value = city.name;
-						option.textContent = city.name;
-						citySelect.appendChild(option);
-					});
-				} catch (error) {
-					console.error('Error fetching cities:', error);
-				}
-			} else {
-				citySelect.innerHTML = '<option value=""><?php if (isset($addreesss["city"])) {
-																echo $addreesss["city"];
-															} else { ?>Select City<?php } ?></option>';
-			}
-		}
-
-		// Initial population of the country dropdown
-		fetchCountries();
 
 
 

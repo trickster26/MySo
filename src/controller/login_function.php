@@ -12,7 +12,6 @@ function login_Controller($email,$password){
     $id = $row['id'];
     $count = mysqli_num_rows($result);
     if($count === 1) {
-        // session_register('name');
         $_SESSION['login_user'] = $name;
         $_SESSION['email'] = $email;
         $_SESSION['phone'] = $phone;

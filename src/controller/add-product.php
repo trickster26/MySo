@@ -1,6 +1,10 @@
 <?php
 session_start();
 include_once '../model/Models.php';
+if (isset($_SESSION['user-status'])){
+    header('location:http://localhost:8000/templates/edit-user.php');
+    exit;
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // *Getting the data from FORM*

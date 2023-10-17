@@ -1,6 +1,6 @@
 <?php
-require("../config/connection.php");
 include_once("navbar.php");
+require("../config/connection.php");
 
 // Check if the user is authenticated (you should implement user authentication)
 if (!isset($_SESSION['id'])) {
@@ -38,7 +38,6 @@ if (isset($_POST['street_address'])) {
 if ($conn->query($updateQuery)) {
     // Address updated successfully
     $_SESSION['edit-address']="Address updated successfully.";
-    var_dump("hello");
     header("Location: http://localhost:8000/templates/addresses.php"); 
     exit;
 } else {;
@@ -79,19 +78,27 @@ if ($result->num_rows === 1) {
 
         <div class="form-group">
             <label for="country">Country</label>
-            <input type="text" class="form-control" id="country" name="country" value="<?php echo $address['country']; ?>">
+            <select id="country" class="form-select" onchange="fetchStates()" name="country">
+                    <option value="">Select Country</option>
+                </select>
+        
             <div class="text-danger" id="country_error"></div>
         </div>
 
         <div class="form-group">
             <label for="state">State</label>
-            <input type="text" class="form-control" id="state" name="state" value="<?php echo $address['state']; ?>">
+            <select id="state" class="form-select" onchange="fetchCities()" name="state">
+                    <option value="">Select State</option>
+                </select>
+    
             <div class="text-danger" id="state_error"></div>
         </div>
 
         <div class="form-group">
             <label for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" value="<?php echo $address['city']; ?>">
+            <select id="city" class="form-select" name="city">
+                    <option value="">Select City</option>
+                </select>
             <div class="text-danger" id="city_error"></div>
         </div>
 
@@ -172,6 +179,111 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent the form from submitting if there are validation errors
     });
 });
+const apiEndpoint = "https://api.countrystatecity.in/v1/";
+const apiKey = "MkRudWJaQnFEblM2ck9hYkRpTVhZbElSUGZUS2NmZ0VwVktnY1o1NQ==";
+
+// Function to fetch countries and populate the country dropdown
+async function fetchCountries() {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const selectedCountry = countrySelect.value;
+    countrySelect.innerHTML = '<option value="">Select Country</option>';
+    try {
+        const response = await fetch(apiEndpoint + 'countries', {
+            headers: {
+                'X-CSCAPI-KEY': apiKey,
+            },
+        });
+        const data = await response.json();
+        data.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country.iso2;
+            option.textContent = country.name;
+            countrySelect.appendChild(option);
+        });
+        countrySelect.value = '<?php echo $address['country']; ?>';
+        fetchStates();
+    } catch (error) {
+        console.error('Error fetching countries:', error);
+    }
+}
+
+// Function to fetch states based on the selected country
+async function fetchStates() {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+
+    stateSelect.innerHTML = '<option value="">Select State</option>';
+
+    const selectedCountry = countrySelect.value;
+
+    if (selectedCountry) {
+        try {
+            const response = await fetch(apiEndpoint + `countries/${selectedCountry}/states`, {
+                headers: {
+                    'X-CSCAPI-KEY': apiKey,
+                },
+            });
+            const data = await response.json();
+
+            stateSelect.innerHTML = '<option value="">Select State</option>';
+            data.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.iso2;
+                option.textContent = state.name;
+                stateSelect.appendChild(option);
+            });
+
+            stateSelect.value = '<?php echo $address['state']; ?>';
+            fetchCities();
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        }
+    } else {
+        stateSelect.innerHTML = '<option value="">Select State</option>';
+        citySelect.innerHTML = '<option value="">Select City</option>';
+    }
+}
+
+// Function to fetch cities based on the selected state
+async function fetchCities() {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+
+    citySelect.innerHTML = '<option value="">Select City</option>';
+
+    const selectedCountry = countrySelect.value;
+    const selectedState = stateSelect.value;
+
+    if (selectedCountry && selectedState) {
+        try {
+            const response = await fetch(apiEndpoint +
+                `countries/${selectedCountry}/states/${selectedState}/cities`, {
+                    headers: {
+                        'X-CSCAPI-KEY': apiKey,
+                    },
+                });
+            const data = await response.json();
+
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            data.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.name;
+                option.textContent = city.name;
+                citySelect.appendChild(option);
+            });
+            citySelect.value = '<?php echo $address['city']; ?>';
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    } else {
+        citySelect.innerHTML = '<option value="">Select City</option>';
+    }
+}
+// country
+fetchCountries();
+
 </script>
 
 

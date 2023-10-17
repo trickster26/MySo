@@ -83,8 +83,7 @@ if(isset($_POST["email"]) && (!empty($_POST["email"]))){
          echo "Mailer Error: " . $mail->ErrorInfo;
       }else{
          $_SESSION["email-success"] = "An email has been sent to you with instructions on how to reset your password.";
-         header("location:http://localhost:8000/templates/success-template.php");
-         
+         header("Location:http://localhost:8000/templates/success-template.php");
       }
    }
 }else{

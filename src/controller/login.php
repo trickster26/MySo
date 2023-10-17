@@ -16,40 +16,43 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $report = login_Controller($email, $password);
     
     if($report){
+      
       $Model = new Models();
       $condi = $Model -> Check($email);
       if($condi>=10){
+       
         if ($remember_me) {
           $token = bin2hex(random_bytes(32));;
           setcookie('remember_me', $token, time() + 30 * 24 * 3600, '/');
           setcookie('remember_email', $email, time() + 30 * 24 * 3600, '/');
           setcookie('remember_password', $password1, time() + 30 * 24 * 3600, '/');
           $_SESSION['remember_me_tokens'][$token] = $email;
-      }else{
-        unset($_COOKIE['remember_me']);
-        unset($_COOKIE['remember_email']);
-        unset($_COOKIE['remember_password']);
-        setcookie("remember_me", "", time()-(60*60*24*7),"/");
-        setcookie("remember_email", "", time()-(60*60*24*7),"/");
-        setcookie("remember_password", "", time()-(60*60*24*7),"/");
-      }
+        }else{
+          unset($_COOKIE['remember_me']);
+          unset($_COOKIE['remember_email']);
+          unset($_COOKIE['remember_password']);
+          setcookie("remember_me", "", time()-(60*60*24*7),"/");
+          setcookie("remember_email", "", time()-(60*60*24*7),"/");
+          setcookie("remember_password", "", time()-(60*60*24*7),"/");
+        }
         header("location: http://localhost:8000/");
         exit();
       }else{
+        $_SESSION['user-status'] = 'not Completed';
         if ($remember_me) {
           $token = bin2hex(random_bytes(32));;
           setcookie('remember_me', $token, time() + 30 * 24 * 3600, '/');
           setcookie('remember_email', $email, time() + 30 * 24 * 3600, '/');
           setcookie('remember_password', $password1, time() + 30 * 24 * 3600, '/');
           $_SESSION['remember_me_tokens'][$token] = $email;
-      }else{
-        unset($_COOKIE['remember_me']);
-        unset($_COOKIE['remember_email']);
-        unset($_COOKIE['remember_password']);
-        setcookie("remember_me", "", time()-(60*60*24*7),"/");
-        setcookie("remember_email", "", time()-(60*60*24*7),"/");
-        setcookie("remember_password", "", time()-(60*60*24*7),"/");
-      }
+        }else{
+          unset($_COOKIE['remember_me']);
+          unset($_COOKIE['remember_email']);
+          unset($_COOKIE['remember_password']);
+          setcookie("remember_me", "", time()-(60*60*24*7),"/");
+          setcookie("remember_email", "", time()-(60*60*24*7),"/");
+          setcookie("remember_password", "", time()-(60*60*24*7),"/");
+        }
         header("location: http://localhost:8000/templates/edit-user.php");
         exit();
       }
