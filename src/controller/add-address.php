@@ -14,6 +14,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors["country"] = "Country is required";
     }
 
+    // Valiadte type
+    if (empty($_POST['type'])) {
+        $errors["type"] = 'Type of address is required.';
+    }
+
     // Validate State
     if (empty($_POST["state"])) {
         $errors["state"] = "State is required";
@@ -38,12 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $country = $_POST["country"];
         $state = $_POST["state"];
         $city = $_POST["city"];
-        $address = [$street, $postel, $country, $state, $city];
+        $type = $_POST['type'];
+        $address = [$type, $street, $postel, $country, $state, $city];
         $model = new Models();
-        $address_status = $model -> Insert($address,'address', ['street_address','pin_code', 'country', 'state', 'city']);
+        $address_status = $model -> Insert($address,'address', ['type','street_address','pin_code', 'country', 'state', 'city']);
         if($address_status){
             $_SESSION['address_status'] = 'Address Added Successfully...!!!';
-            header('location:http://localhost:8000/templates/add_address.php');
+            header('location:http://localhost:8000/templates/addresses.php');
             exit;
         }
 

@@ -159,7 +159,7 @@ class Models
         } elseif ($table === 'address') {
             try {
             global $conn;
-            $query = "INSERT INTO `address` (`street_address`,`pin_code`,`country`,`state`,`city`, `user_id`) VALUES ('$data[0]','$data[1]','$data[2]','$data[3]','$data[4]','$id')";
+            $query = "INSERT INTO `address` (`address_type`,`street_address`,`pin_code`,`country`,`state`,`city`, `user_id`) VALUES ('$data[0]','$data[1]','$data[2]','$data[3]','$data[4]','$data[5]','$id')";
             return $conn->query($query);
         } catch (Exception $e) {
             echo $e;

@@ -1,6 +1,11 @@
 <?php
 include_once("navbar.php");
 require("../config/connection.php");
+include('../config/constant.php');
+if (!isset($_SESSION['login_user'])) {
+	header("location:" . URL);
+	exit();
+}
 
 // Check if the user is authenticated (you should implement user authentication)
 if (!isset($_SESSION['id'])) {
@@ -20,6 +25,7 @@ if (isset($_GET['id'])) {
 // Check if the form is submitted for address update
 if (isset($_POST['street_address'])) {
     // Retrieve and sanitize form data (you should add more validation)
+    $newType = mysqli_real_escape_string($conn,$_POST['type']);
     $newStreetAddress = mysqli_real_escape_string($conn, $_POST['street_address']);
     $newPinCode = mysqli_real_escape_string($conn, $_POST['pin_code']);
     $newCountry = mysqli_real_escape_string($conn, $_POST['country']);
@@ -28,6 +34,8 @@ if (isset($_POST['street_address'])) {
     
     // Update the address in the database
     $updateQuery = "UPDATE address SET 
+    address_type = '$newType',
+    street_address='$newStreetAddress',
         street_address = '$newStreetAddress',
         pin_code = '$newPinCode',
         country = '$newCountry',
@@ -64,6 +72,18 @@ if ($result->num_rows === 1) {
 <div class="container">
     <h2>Edit Address</h2>
     <form method="POST" action="http://localhost:8000/templates/edit-address.php?id=<?php echo $addressId; ?>">
+        <div class="form-group">
+            <label for="address_type">Type:</label>
+            <select class="form-select" name="type" id="address_type">
+                <option value="<?php echo $address['address_type']; ?>"><?php echo $address['address_type']; ?></option>
+                <option value="Home">Home</option>
+                <option value="Office">Office</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <div class="text-danger" id="type_error"></div>
+        </div>
+
         <div class="form-group">
             <label for="street_address">Street Address</label>
             <input type="text" class="form-control" id="street_address" name="street_address" value="<?php echo $address['street_address']; ?>">
@@ -114,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     form.addEventListener("submit", function (event) {
         // Get the input field values
+        const type = document.getElementById("address_type").value;
         const streetAddress = document.getElementById("street_address").value;
         const pinCode = document.getElementById("pin_code").value;
         const country = document.getElementById("country").value;
@@ -121,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const city = document.getElementById("city").value;
 
         // Get the error message elements
+        const typeEroor = document.getElementById("type_error");
         const streetAddressError = document.getElementById("street_address_error");
         const pinCodeError = document.getElementById("pin_code_error");
         const countryError = document.getElementById("country_error");
@@ -128,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const cityError = document.getElementById("city_error");
 
         // Reset error messages
+        typeEroor.innerHTML = "";
         streetAddressError.textContent = "";
         pinCodeError.textContent = "";
         countryError.textContent = "";
@@ -135,6 +158,12 @@ document.addEventListener("DOMContentLoaded", function () {
         cityError.textContent = "";
 
         let valid = true;
+
+        // Vlaidation Type of address
+        if (type.trim()==="") {
+            typeEroor.textContent = "Type is required";
+            valid = false;
+        }
 
         // Validate Street Address (Required)
         if (streetAddress.trim() === "") {

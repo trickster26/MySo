@@ -12,13 +12,7 @@ if (!isset($_SESSION['login_user'])) {
         display: block;
     }
 </style>
-<?php if (isset($_SESSION['address_status'])){
- ?>
- <div class="alert alert-success alert-dismissible fade show" role="alert">
-  <strong>Hurrey!!!</strong> <?php echo $_SESSION['address_status']; ?>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php unset($_SESSION['address_status']); } ?>
+
 <div class="container d-flex justify-content-center">
     <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12 col-xs-12 edit_information">
         <form action="http://localhost:8000/src/controller/add-address.php" enctype="multipart/form-data" id="edit-form" method="POST">
@@ -26,6 +20,20 @@ if (!isset($_SESSION['login_user'])) {
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">
+                    <div class="form-group">
+            <label for="type">Type of Address:</label>
+            <select class="form-select" name="type" id="type">
+                <option value="">Select Type</option>
+                <option value="Home">Home</option>
+                <option value="Office">Office</option>
+                <option value="other">Other</option>
+            </select>
+            
+    
+            <div class="text-danger" id="type_error">
+            <?php if (isset($_SESSION['errors']["type"])) echo $_SESSION['errors']["type"]; ?>
+            </div>
+        </div>
                     <div class="form-group">
             <label for="country">Country</label>
             <select id="country" class="form-select" onchange="fetchStates()" name="country">
@@ -216,17 +224,26 @@ document.addEventListener("DOMContentLoaded", function () {
             const cityError = document.getElementById("city_error");
             const streetError = document.getElementById("street_error");
             const pinError = document.getElementById("pin_error");
+            const typeError = document.getElementById("type_error");
 
             countryError.textContent = "";
             stateError.textContent = "";
             cityError.textContent = "";
             streetError.textContent = "";
             pinError.textContent = "";
+            typeError.textContent = "";
 
             // Validate Country
             const country = document.getElementById("country");
             if (country.value === "") {
                 countryError.textContent = "Country is required";
+                isValid = false;
+            }
+
+            // Validation Type
+            const type = document.getElementById("type");
+            if (type.value === ""){
+                typeError.textContent = "Type is required";
                 isValid = false;
             }
 

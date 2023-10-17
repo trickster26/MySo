@@ -87,7 +87,10 @@ include('navbar.php');
           <div class="col-12">
             <div class="row">
               <div class="col-md-6">
-                <button  type="submit" class="btn btn-dark w-100 fw-bold">RESET</button>
+                <button  type="submit" id="reset-button" class="btn btn-dark w-100 fw-bold">
+                <span class="spinner-border spinner-border-sm me-2 d-none" id="reset-spinner" role="status" aria-hidden="true"></span>
+                  RESET
+                </button>
               </div>
             </div>
           </div>
@@ -99,6 +102,42 @@ include('navbar.php');
 <?php }?>
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const resetForm = document.forms.reset; // Replace 'reset' with your actual form name
+    const resetButton = document.getElementById("reset-button");
+    const resetSpinner = document.getElementById("reset-spinner");
+
+    resetForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Disable the button and show the spinner
+        resetButton.disabled = true;
+        resetSpinner.classList.remove("d-none");
+
+        // Submit the form
+        fetch(resetForm.action, {
+            method: "POST",
+            body: new FormData(resetForm),
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    // Successful response, handle as needed (e.g., show success message)
+                } else {
+                    // Error response, handle as needed (e.g., show error message)
+                }
+            })
+            .catch((error) => {
+                // Error occurred during form submission, handle as needed
+            })
+            .finally(() => {
+                // Re-enable the button and hide the spinner
+                resetButton.disabled = false;
+                resetSpinner.classList.add("d-none");
+            });
+    });
+});
+</script>
 
 <?php
 unset($_SESSION['forget-error']);
