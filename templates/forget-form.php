@@ -89,7 +89,8 @@ include('navbar.php');
               <div class="col-md-6">
                 <button  type="submit" id="reset-button" class="btn btn-dark w-100 fw-bold">
                 <span class="spinner-border spinner-border-sm me-2 d-none" id="reset-spinner" role="status" aria-hidden="true"></span>
-                  RESET
+                <p id="success-message" class="d-none">Reset successful!</p>
+                  <span id="reset-text">RESET</span>
                 </button>
               </div>
             </div>
@@ -104,9 +105,11 @@ include('navbar.php');
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const resetForm = document.forms.reset; // Replace 'reset' with your actual form name
+    const resetForm = document.forms.reset; 
     const resetButton = document.getElementById("reset-button");
     const resetSpinner = document.getElementById("reset-spinner");
+    const successMessage = document.getElementById("success-message");
+    const reset = document.getElementById("reset-text");
 
     resetForm.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the default form submission
@@ -122,16 +125,28 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then((response) => {
                 if (response.status === 200) {
-                    // Successful response, handle as needed (e.g., show success message)
+                  successMessage.textContent = "Mail sent successfully!";
+                  successMessage.classList.remove("d-none")
+                  reset.classList.add("d-none")
+                  setTimeout(()=>{
+                    successMessage.classList.add("d-none")
+                    reset.classList.remove("d-none")
+                  },2000);
+                  
                 } else {
-                    // Error response, handle as needed (e.g., show error message)
+                  successMessage.textContent = "Something Went Wrong!";
+                  successMessage.classList.remove("d-none")
+                  reset.classList.add("d-none")
+                  setTimeout(()=>{
+                    successMessage.classList.add("d-none")
+                    reset.classList.remove("d-none")
+                  },2000);
                 }
             })
             .catch((error) => {
                 // Error occurred during form submission, handle as needed
             })
             .finally(() => {
-                // Re-enable the button and hide the spinner
                 resetButton.disabled = false;
                 resetSpinner.classList.add("d-none");
             });

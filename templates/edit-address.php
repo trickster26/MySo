@@ -235,6 +235,7 @@ async function fetchCountries() {
     } catch (error) {
         console.error('Error fetching countries:', error);
     }
+
 }
 
 // Function to fetch states based on the selected country

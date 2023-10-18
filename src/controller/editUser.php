@@ -89,17 +89,15 @@ if (empty($errors)) {
         // Define the path to the profile image and remove it from the file system
             $imagePath = '../../assets/images/uploads/' . $_SESSION['id'] . '/' . $_SESSION['image'] . '.' . $_SESSION['extension'];
                 if (file_exists($imagePath)) {
-                unlink($imagePath);
+                    unlink($imagePath);
             }
 
         // Remove image-related session variables
             unset($_SESSION['image']);
             unset($_SESSION['extension']);
-            $_SESSION['success_message'] = 'Your profile has been updated successfully.';
-            header("Location: http://localhost:8000/templates/edit-user.php");
-            exit;
         }
-    }else if (!empty($_FILES['profile-Image']['tmp_name'])) {
+    }
+    if (!empty($_FILES['profile-Image']['tmp_name'])) {
 
         // *File Upload Handling*
         $targetDirectory = '../../assets/images/uploads/'. $id . '/'; 
@@ -134,7 +132,7 @@ if (empty($errors)) {
             $imageFile = $updated_file_name;
             $status = $model->Model_Edit($first_name, $last_name, $email, $phone, $_POST["birthday"], $gender, $nationality, $imageFile, $income);
 
-            if($status && $subject_status && $hobbie_status && $address_status){
+            if($status && $subject_status && $hobbie_status){
                 $_SESSION['success_message'] = 'Your profile has been updated successfully.';
                 header("Location:http://localhost:8000/templates/edit-user.php");
                 exit;

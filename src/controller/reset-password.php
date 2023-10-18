@@ -38,19 +38,29 @@ Click here</a> to reset password.</p>';
               <div class="row g-3">
                 <div class="col-md-6">
                   <label for="your-pass" class="form-label">Enter New Password:</label>
-                  <input type="password" class="form-control" id="your-pass" name="pass1" required>
-                  
+                  <div class="input-group">
+                  <input type="password" class="form-control password" id="your-pass" name="pass1" required>
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    <i class="bi bi-eye-slash"></i>
+                  </button>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <label for="your-email" class="form-label">Re-Enter New Password:</label>
-                  <input type="password" class="form-control" id="your-email" name="pass2" required>
+                  <label for="password" class="form-label">Re-Enter New Password:</label>
+                  <div class="input-group">
+                  <input type="password" class="form-control password" id="password" name="pass2" required>
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="bi bi-eye-slash"></i>
+                      </button>
+                      </div>
                 </div>
-                <i style="margin-left: -30px; margin-top: 7px;" class="bi bi-eye-slash " id="togglePassword"></i>
                 <div class="col-12">
                   <div class="row">
+                    <div class="col-3"></div>
                     <div class="col-md-6">
                       <button type="submit" class="btn btn-dark w-100 fw-bold">Reset Password</button>
                       <input type="hidden" name="email" value="<?php echo $email; ?>" />
+                     
                     </div>
                   </div>
                 </div>
@@ -60,20 +70,25 @@ Click here</a> to reset password.</p>';
         </div>
       </div>
       <script>
-        // Eye show password
-      const togglePassword = document.querySelector("#togglePassword");
-      const password = document.querySelector("#password");
+    // Eye show password
+    const togglePassword = document.querySelectorAll("#togglePassword");
+    const password = document.querySelectorAll(".password");
 
-      togglePassword.addEventListener("click", function () {
-   
-      // toggle the type attribute
-      const type = password.getAttribute("type") === "password" ? "text" : "password";
-      password.setAttribute("type", type);
-      // toggle the eye icon
-      this.classList.toggle('bi-eye');
-      this.classList.toggle('bi-eye-slash');
-      }
-      </script>
+    togglePassword.forEach((btn, index) => {
+        btn.addEventListener("click", function () {
+            // toggle the type attribute for the corresponding password field
+            const type = password[index].getAttribute("type") === "password" ? "text" : "password";
+            password[index].setAttribute("type", type);
+
+            // toggle the eye icon for both buttons
+            togglePassword.forEach((btn) => {
+                btn.querySelector("i").classList.toggle('bi-eye');
+                btn.querySelector("i").classList.toggle('bi-eye-slash');
+            });
+        });
+    });
+
+</script>
 
       <?php include("../../templates/footer.php");
     } else {

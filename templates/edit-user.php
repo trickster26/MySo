@@ -86,7 +86,7 @@ if (isset($_SESSION['success_message'])) {
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="form-group">
 						<fieldset>
-							<?php if (!isset($_SESSION['image'])) { ?>
+							<?php if (!isset($_SESSION['image']) || $_SESSION['image']=='' || empty($_SESSION['image'])) { ?>
 								<div class="grid-65">
 									<div class="image">
 										<img style="height: 150px; width: 150px; border-radius: 50%; object-fit: cover; background: #dfdfdf;" src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" alt="..."><br>
@@ -163,7 +163,7 @@ if (isset($_SESSION['success_message'])) {
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="form-group">
 						<label class="profile_details_text">Hobbies:</label>
-						<select name="hobbies[]" class="form-control" size="3" multiple="multiple">
+						<select name="hobbies[]" id="selectTwo" class="form-control" size="3" multiple="multiple">
 							<option value="video-game" <?php if (in_array('video-game', $hobbies)) { ?> selected <?php } ?>>Video Games</option>
 							<option value="football" <?php if (in_array('football', $hobbies)) { ?> selected <?php } ?>>Football</option>
 							<option value="reading" <?php if (in_array('reading', $hobbies)) { ?> selected <?php } ?>>Reading</option>
@@ -391,11 +391,18 @@ if (isset($_SESSION['success_message'])) {
 			return !isNaN(income) && parseFloat(income) > 0;
 		}
 
+		// SELECT2
+		$(document).ready(function () {
+    		$('#selectTwo').select2({
+      			placeholder: 'Select options', 
+      			width: '100%',
+      			theme: 'classic'
+    		});
+ 	 	});
 
 
 
-
-
+		//  Image Preview
 		const image = document.querySelector("img");
 		const input = document.getElementById("input");
 
