@@ -21,7 +21,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">MySo</a>
+    <a class="navbar-brand" href="http://localhost:8000/">MySo</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -30,6 +30,11 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
+        <?php if($_SESSION['role']==1){ ?>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="http://localhost:8000/templates/dashboard.php">Dashboard</a>
+        </li>
+        <?php }?>
         <li class="nav-item">
           <a class="nav-link" href="http://localhost:8000/templates/about.php">About Us</a>
         </li>

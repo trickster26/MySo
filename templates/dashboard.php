@@ -1,6 +1,10 @@
 <?php 
     session_start();
     require("../config/connection.php");
+    if($_SESSION['role']!=1){
+        header("location:http://localhost:8000/");
+        exit;
+    }
     if(isset($_SESSION['delete-success'])){
         ?>
         <div class="alert alert-danger">
@@ -47,7 +51,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Brand -->
-            <a class="navbar-brand py-lg-9 mb-lg-5 px-lg-6 me-0" href="#">
+            <a class="navbar-brand py-lg-9 mb-lg-5 px-lg-6 me-0" href="http://localhost:8000/">
                 <img width="200px" style="height: 80px !important;" height="4vh" src="../assets/images/1j+ojFVDOMkX9Wytexe43D6kh...OJqhNPmBbFwXs1M3EMoAJtlikqgPtq9vk+" alt="...">
             </a>
             <!-- User menu (mobile) -->
@@ -186,7 +190,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="http://localhost:8000/src/controller/logout.php">
                             <i class="bi bi-box-arrow-left"></i> Logout
                         </a>
                     </li>

@@ -159,6 +159,14 @@ class Models
                 $count++;
             }
         }
+        $id =$arr['user_id'];
+
+        $queryy = "SELECT role_id FROM `user_role` WHERE user_id = '$id'";
+        $resulte = mysqli_query($conn,$queryy);
+        $arry = mysqli_fetch_assoc($resulte);
+        $role=$arry['role_id'];
+        $_SESSION['role'] = $role;
+
         // *Checking if the user completed its profile or not*
         if ($count < 10) {
             $_SESSION['login_user'] = $arr['first_name'];
