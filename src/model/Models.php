@@ -34,6 +34,64 @@ class Models
         }
     }
 
+    function Check_Exists($email){
+        $sql="SELECT id FROM user WHERE email='".$email."'";
+        global $conn;
+        $query=mysqli_query($conn,$sql);
+        if(mysqli_num_rows($query)>0){
+                return false;
+        }else{
+                return true;
+        }
+    }
+
+    public function assignUserRole($user_id, $role_id) {
+        $query = "INSERT INTO user_role (user_id, role_id) VALUES (?, ?)";
+        global $conn;    
+    
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            return false; // Failed to prepare the statement
+        }
+
+        $stmt->bind_param("ii", $user_id, $role_id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true; // Role assigned successfully
+        } else {
+            $stmt->close();
+            return false; // Failed to assign the role
+        }
+    }
+
+
+    public function getUserIdByEmail($email) {
+        $query = "SELECT id FROM users WHERE email = ?";
+        global $conn;
+
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            return false; 
+        }
+
+        $stmt->bind_param("s", $email);
+
+        if ($stmt->execute()) {
+            $stmt->bind_result($user_id);
+
+            if ($stmt->fetch()) {
+                $stmt->close();
+                return $user_id; 
+            }
+        }
+
+        $stmt->close();
+        return false; // User not found
+    }
+
     // *Contact Us form data insertion*
     function Model_ContactUs($name, $email, $subject, $message)
     {
@@ -94,7 +152,6 @@ class Models
         $query = "SELECT * FROM `profile` WHERE email = '$email' ";
         $result = mysqli_query($conn, $query);
         $arr = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        print_r($arr);
 
         $count = 0;
         foreach ($arr as $key => $value) {
@@ -108,6 +165,7 @@ class Models
             $_SESSION['email'] = $arr['email'];
             $_SESSION['phone'] = $arr['phone'];
             $_SESSION['id'] = $arr['user_id'];
+            $_SESSION['status'] = $arr['status'];
         } else {
             $_SESSION['login_user'] = $arr['first_name'];
             $_SESSION['email'] = $arr['email'];
@@ -120,6 +178,7 @@ class Models
             $_SESSION['income'] = $arr['monthly_income'];
             $_SESSION['image'] = $arr['image'];
             $_SESSION['extension'] = explode(".", $arr["image"])[1];
+            $_SESSION['status'] = $arr['status'];
         }
 
         return $count;

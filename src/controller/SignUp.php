@@ -56,15 +56,25 @@ class SignUp extends Models {
             $sha256HashPassword = hash('sha256', $password);
 
             $model = new Models();
-            $status = $model->Model_SignUp($name, $email, $phone, $sha256HashPassword);
+            $valid = $model -> Check_Exists($email);
+            if($valid){
+                $status = $model->Model_SignUp($name, $email, $phone, $sha256HashPassword);
 
             
-            if ($status){
-                $report = login_Controller($email, $sha256HashPassword);
-                if($report){
-                    header("Location: http://localhost:8000/templates/edit-user.php" );
-                    exit();
+                if ($status){
+                    $defaultRoleId = 5; 
+                    $user_id = $model->getUserIdByEmail($email);
+                    $model->assignUserRole($user_id, $defaultRoleId);
+                    $report = login_Controller($email, $sha256HashPassword);
+                    if($report){
+                        header("Location: http://localhost:8000/templates/edit-user.php" );
+                        exit();
+                    }
                 }
+            }else{
+                $_SESSION['exist'] = 'User Already exists';
+                header("Location: http://localhost:8000/templates/signup.php" );
+                exit();
             }
         } 
     }

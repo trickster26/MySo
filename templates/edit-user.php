@@ -2,6 +2,10 @@
 include("./navbar.php");
 include('../config/constant.php');
 include('../config/connection.php');
+include('../src/model/Models.php');
+
+$model = new Models();
+$model -> Check($_SESSION['email']);
 
 if (!isset($_SESSION['login_user'])) {
 	header("location:" . URL);

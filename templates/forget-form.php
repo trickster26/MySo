@@ -88,8 +88,8 @@ include('navbar.php');
             <div class="row">
               <div class="col-md-6">
                 <button  type="submit" id="reset-button" class="btn btn-dark w-100 fw-bold">
-                <span class="spinner-border spinner-border-sm me-2 d-none" id="reset-spinner" role="status" aria-hidden="true"></span>
-                <p id="success-message" class="d-none">Reset successful!</p>
+                  <span class="spinner-border spinner-border-sm me-2 d-none" id="reset-spinner" role="status" aria-hidden="true"></span>
+                  <p id="success-message" class="d-none">Reset successful!</p>
                   <span id="reset-text">RESET</span>
                 </button>
               </div>

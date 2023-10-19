@@ -5,7 +5,15 @@ if (isset($_SESSION['login_user'])) {
 	header("location:" . URL);
 	exit();
 }
+
 ?>
+
+<?php if(isset($_SESSION['exist'])): ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong><?php echo $_SESSION['exist'] ?></strong> 
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php unset($_SESSION['exist']); endif; ?>
 <style>
   .error{
     color: red;
