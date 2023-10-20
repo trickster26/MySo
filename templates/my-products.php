@@ -1,13 +1,18 @@
 <?php
 include('navbar.php');
 require('../config/connection.php');
+require('../config/constant.php');
+
+if($_SESSION['role']==5){
+  header("location:" . URL);
+	exit();
+}
 ?>
 
 <?php
 // Fetch products
 $sql = 'SELECT * FROM product WHERE user_id ="'.$_SESSION['id'].'"' ;
 $result = $conn->query($sql);
-
 
  ?>
 <table class="table">

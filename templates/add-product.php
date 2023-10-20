@@ -4,7 +4,13 @@ include('../config/constant.php');
 if (!isset($_SESSION['login_user'])) {
 	header("location:" . URL);
 	exit();
-} ?>
+} 
+if($_SESSION['role']==5){
+  header("location:" . URL);
+	exit();
+}
+
+?>
 
 <div class="container d-flex justify-content-center">
 	<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12 col-xs-12 edit_information">

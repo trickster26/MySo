@@ -30,7 +30,7 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-        <?php if($_SESSION['role']==1){ ?>
+        <?php if($_SESSION['role']==1 || $_SESSION['role']==2 || $_SESSION['role']==3){ ?>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="http://localhost:8000/templates/dashboard.php">Dashboard</a>
         </li>

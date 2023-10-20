@@ -1,7 +1,7 @@
 <?php 
     session_start();
     require("../config/connection.php");
-    if($_SESSION['role']!=1){
+    if($_SESSION['role']!=1 && $_SESSION['role']!=2 && $_SESSION['role']!=3 ){
         header("location:http://localhost:8000/");
         exit;
     }
@@ -374,6 +374,7 @@
                             </thead>
                             <tbody>
                                 <?php if ($result->num_rows > 0) {
+                                    
                                      while ($row = $result->fetch_assoc()) {
                                         $name = $row["name"];
                                         $email = $row["email"];
@@ -381,6 +382,11 @@
                                         $phone = $row['phone'];
                                         $id = $row['id'];
                                         $status = $row['status'];
+                                
+                                        $roleId = $conn -> query("SELECT `role_id` FROM `user_role` WHERE user_id = '$id'");
+                                    
+                                       $role_id  = $roleId->fetch_assoc();
+                                       $role = $role_id['role_id'];
                                         $res = $conn->query("SELECT `image` FROM `profile` WHERE user_id = '$id'");
                                         while($img  = $res->fetch_assoc()){
                                             $image = $img['image'];
@@ -420,7 +426,11 @@
                                         </span>
                                     </td>
                                     <td>
-                                    <form action="http://localhost:8000/src/controller/admin_controll.php" class="mx-1 my-1" method="post">
+                                        
+                                    <?php if($role==1){ ?>
+                                        <span class="badge badge-lg badge-dot mx-6">Active</span>
+                                    <?php }else{ ?>
+                                    <form action="http://localhost:8000/src/controller/admin_controll.php" class="my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                                         <select name="new_status" class="badge badge-lg badge-dot">
                                             <option value="0" <?php if ($status == 0) echo "selected"; ?>>Active</option>
@@ -430,8 +440,12 @@
                                         </select>
                                         <button type="submit" style="color: black;" class="badge badge-pill badge-dark ">Update</button>
                                     </form>
+                                    <?php } ?>
                                     </td>
                                     <td>
+                                        <?php if($role==1){ ?>
+                                            <span class="badge badge-lg badge-dot mx-6">super_user</span>
+                                        <?php }else{ ?>
                                         <form action="http://localhost:8000/src/controller/admin_controll.php" class="mx-1 my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                                         <select name="new_role" class="badge badge-lg badge-dot" class="form-select">
@@ -463,13 +477,20 @@
                                         </select>
                                         <button type="submit" style="color: black;" class="badge badge-pill badge-dark ">Assign</button>
                                         </form>
+                                        <?php }?>
                                     </td>
+                                    
                                     <td class="text-end">
+                                        <?php if($_SESSION['role'] ==1){ ?>
                                         <a href="#" class="btn btn-sm btn-neutral">View</a>
+                                        <?php if($role!=1){ ?>
                                         <button type="button" class="btn btn-sm btn-square btn-neutral text-danger-hover delete-user" data-userid="<?php echo $id; ?>">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        <?php }?>
+                                        <?php }?>
                                     </td>
+                                    
                                     
 
 
