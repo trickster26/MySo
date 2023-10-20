@@ -341,7 +341,13 @@
                     </div>
                 </div>
 
+
+
+
+
                 <!-- User Management -->
+
+
                 <?php 
                 $itemsPerPage = 10;
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -417,9 +423,9 @@
                                             <?php if($status == 0){ ?>
                                                 <i class="bg-success"></i>Active
                                             <?php }else if($status == 1){?>
-                                                <i class="bg-danger"></i>User Delete
+                                                <i class="bg-danger"></i>User Deleted
                                             <?php } else if($status == 2) { ?>
-                                                <i class="bg-dark"></i>Admin Delete
+                                                <i class="bg-dark"></i>Admin Deleted
                                             <?php }else if($status == 3) {?>
                                                 <i class="bg-warning"></i>Banned
                                             <?php } ?>
@@ -434,8 +440,8 @@
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                                         <select name="new_status" class="badge badge-lg badge-dot">
                                             <option value="0" <?php if ($status == 0) echo "selected"; ?>>Active</option>
-                                            <option value="1" <?php if ($status == 1) echo "selected"; ?>>User Delete</option>
-                                            <option value="2" <?php if ($status == 2) echo "selected"; ?>>Admin Delete</option>
+                                            <option value="1" <?php if ($status == 1) echo "selected"; ?>>User Deleted</option>
+                                            <option value="2" <?php if ($status == 2) echo "selected"; ?>>Admin Deleted</option>
                                             <option value="3" <?php if ($status == 3) echo "selected"; ?>>Banned</option>
                                         </select>
                                         <button type="submit" style="color: black;" class="badge badge-pill badge-dark ">Update</button>
@@ -460,7 +466,7 @@
                                             $stmt->close();
 
                                             $roles = array(
-                                                1 => "super_user",
+                                                // 1 => "super_user",
                                                 2 => "admin",
                                                 3 => "manager",
                                                 4 => "seller",
@@ -482,11 +488,36 @@
                                     
                                     <td class="text-end">
                                         <?php if($_SESSION['role'] ==1){ ?>
-                                        <a href="#" class="btn btn-sm btn-neutral">View</a>
+                                            
+                                            <a href="#" class="btn btn-sm btn-neutral btn-view" data-bs-toggle="modal" data-bs-target="#userProfileModal<?php echo $id; ?>">View</a>
+
                                         <?php if($role!=1){ ?>
                                         <button type="button" class="btn btn-sm btn-square btn-neutral text-danger-hover delete-user" data-userid="<?php echo $id; ?>">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                                                                    <!-- Modal for user profile -->
+
+<div class="modal fade" id="userProfileModal<?php echo $id; ?>" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- User profile content goes here -->
+        <p>Name: <?php echo $name; ?></p>
+        <p>Email: <?php echo $email; ?></p>
+        <p>Date: <?php echo $date; ?></p>
+        <p>Phone: <?php echo $phone; ?></p>
+        <!-- You can add more user profile information here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
                                         <?php }?>
                                         <?php }?>
                                     </td>
@@ -542,7 +573,7 @@
                     echo '</ul>';
                     ?>
                     <div class="card-footer border-0 py-5">
-                        <span class="text-muted text-sm">Showing 10 items out of <?php echo $totalItems; ?> results found</span>
+                        <span class="text-muted text-sm">Showing <?php echo $result->num_rows ?> items out of <?php echo $totalItems; ?> results found</span>
                     </div>
                 </div>
             </div>
@@ -583,4 +614,24 @@
             }
         });
     });
+
+
+  // This JavaScript code should be placed at the end of your HTML document
+
+  // Attach a click event handler to all elements with the class "btn-view"
+  document.querySelectorAll('.btn-view').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default behavior (e.g., navigating to a link)
+
+      // Extract the modal ID from the "data-target" attribute of the clicked button
+      var modalId = button.getAttribute('data-target');
+
+      // Show the modal with the extracted ID
+      $(modalId).modal('show'); // This uses jQuery, which Bootstrap relies on
+    });
+  });
+
+
 </script>
+<!-- Include Bootstrap JavaScript at the end of your HTML document -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
