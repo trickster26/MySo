@@ -16,6 +16,7 @@ function login_Controller($email,$password){
         $_SESSION['email'] = $email;
         $_SESSION['phone'] = $phone;
         $_SESSION['id']=$id;
+        $_SESSION['status'] = $row['status'];
         return true;
      }else {
         return false;

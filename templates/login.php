@@ -1,11 +1,23 @@
 <?php 
 // include('././../config/constant.php');
 include('../config/constant.php');
-include('./navbar.php'); 
+ session_start();
+if(isset($_SESSION['account-status'])){
+  ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong><?php echo $_SESSION['account-status']?></strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+  <?php 
+session_unset(); 
+session_destroy(); 
+}
+include('./navbar.php');
 if (isset($_SESSION['id'])) {
   header("Location: http://localhost:8000/index.php");
   exit;
 }
+
 
 ?>
 

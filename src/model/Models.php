@@ -110,7 +110,7 @@ class Models
     {
         try {
             global $conn;
-            $query = "SELECT * FROM user WHERE email = '$email' and password = '$password'";
+            $query = "SELECT * FROM user WHERE email = '$email' and password = '$password' ";
             $result = mysqli_query($conn, $query);
             return $result;
         } catch (Exception $e) {

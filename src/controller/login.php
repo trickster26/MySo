@@ -2,7 +2,7 @@
 include_once(__DIR__ . '/../../config/constant.php');
 include_once '../model/Models.php';
 include_once '../controller/login_function.php';
-include('/var/www/html/php/form_handling/config/connection.php');
+include('../../config/connection.php');
 
 
 
@@ -14,6 +14,19 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $password = hash('sha256', $password1);
 
     $report = login_Controller($email, $password);
+    if($_SESSION['status']==1){
+      $_SESSION['account-status']= "Account is Deleted and no longer accessable!";
+      header("location: http://localhost:8000/templates/login.php");
+      exit;
+    }else if($_SESSION['status']==2){
+      $_SESSION['account-status']="Your account has been deactivated!";
+      header('location: http://localhost:8000/templates/login.php');
+      exit;
+    }else if($_SESSION['status']==3){
+      $_SESSION['account-status']="You have beed banned!";
+      header('location: http://localhost:8000/templates/login.php');
+      exit;
+    }
     
     if($report){
       
