@@ -15,13 +15,61 @@
     unset($_SESSION['delete-success']);}
 ?>
 
+<?php 
+                $itemsPerPage = 10;
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $offset = ($page - 1) * $itemsPerPage;
+                
+
+                $query = "SELECT * FROM user LIMIT $itemsPerPage OFFSET $offset";
+                $result = $conn->query($query);
+
+                ?>
+                <?php
+                $itemsPerPageI = 10;
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $offset = ($page - 1) * $itemsPerPageI;
+                
+                $statusFilter = isset($_GET['status']) ? $_GET['status'] : "all";
+                $roleFilter = isset($_GET['role']) ? $_GET['role'] : "all";
+             
+                $query = "SELECT u.* FROM user u
+                          LEFT JOIN user_role ur ON u.id = ur.user_id
+                          LEFT JOIN roles r ON ur.role_id = r.id
+                          WHERE 1=1";
+                
+                if ($statusFilter !== "all") {
+                    $query .= " AND u.status = $statusFilter";
+                }
+                
+                if ($roleFilter !== "all") {
+                    $query .= " AND r.id = $roleFilter";
+                }
+                
+                $countQuery = $query;
+                $countQuery = str_replace("SELECT u.*", "SELECT COUNT(DISTINCT u.id) as total", $countQuery);
+                $countResult = $conn->query($countQuery);
+                
+                if ($countResult && $countResult->num_rows > 0) {
+                    $countRow = $countResult->fetch_assoc();
+                    $totalItems = $countRow['total'];
+                } else {
+                    $totalItems = 0;
+                }
+                
+                $query .= " LIMIT $itemsPerPageI OFFSET $offset";
+                // query ended here
+                
+                $result = $conn->query($query);
+                
+                ?>
 <style>
     @import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
 
 /* Bootstrap Icons */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
 </style>
-                                    <!-- Modal for confirmation -->
+                                    <!-- Modal for DELETE confirmation -->
 <div class="modal" id="confirmationModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -275,8 +323,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">New projects</span>
-                                        <span class="h3 font-bold mb-0">215</span>
+                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Accounts</span>
+                                        <span class="h3 font-bold mb-0"><?php echo $totalItems; ?></span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
@@ -348,22 +396,35 @@
                 <!-- User Management -->
 
 
-                <?php 
-                $itemsPerPage = 10;
-                $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                $offset = ($page - 1) * $itemsPerPage;
-                
-
-                $query = "SELECT * FROM user LIMIT $itemsPerPage OFFSET $offset";
-                $result = $conn->query($query);
-
-                ?>
+               
 
 
                 <div class="card shadow border-0 mb-7">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <h5 class="mb-0">User Management</h5>
+                        <div class="filter-controls text-end">
+                        <label for="status-filter" style=" font-size: 1em; font-weight: bolder;">Filter by Status:</label>
+                            <select class="badge badge-lg badge-dot  mx-3" id="status-filter" style="outline: 1px solid grey ;" onchange="filterTable()">
+                                <option value="all" <?php echo ($statusFilter === "all") ? 'selected' : ''; ?>>All</option>
+                                <option value="0" <?php echo ($statusFilter === "0") ? 'selected' : ''; ?>>Active</option>
+                                <option value="1" <?php echo ($statusFilter === "1") ? 'selected' : ''; ?> >User Deleted</option>
+                                <option value="2" <?php echo ($statusFilter === "2") ? 'selected' : ''; ?>>Admin Deleted</option>
+                                <option value="3" <?php echo ($statusFilter === "3") ? 'selected' : ''; ?>>Banned</option>
+                            </select>
+
+                        <label for="role-filter" style=" font-size: 1em; font-weight: bolder;">Filter by Role:</label>
+                            <select class="badge badge-lg badge-dot mx-3"  id="role-filter" style="outline: 1px solid grey ;" onchange="filterTable()">
+                                <option value="all" <?php echo ($roleFilter === "all") ? 'selected' : ''; ?>>All</option>
+                                <option value="1" <?php echo ($roleFilter === "1") ? 'selected' : ''; ?>>Super User</option>
+                                <option value="2" <?php echo ($roleFilter === "2") ? 'selected' : ''; ?>>Admin</option>
+                                <option value="3" <?php echo ($roleFilter === "3") ? 'selected' : ''; ?>>Manager</option>
+                                <option value="4" <?php echo ($roleFilter === "4") ? 'selected' : ''; ?>>Seller</option>
+                                <option value="5" <?php echo ($roleFilter === "5") ? 'selected' : ''; ?>>User</option>
+                            </select>
                     </div>
+                    </div>
+                    
+                    
                     <div class="table-responsive">
                         <table class="table table-hover table-nowrap">
                             <thead class="thead-light">
@@ -438,7 +499,7 @@
                                     <?php }else{ ?>
                                     <form action="http://localhost:8000/src/controller/admin_controll.php" class="my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
-                                        <select name="new_status" class="badge badge-lg badge-dot">
+                                        <select name="new_status" class="outline badge badge-lg badge-dot" >
                                             <option value="0" <?php if ($status == 0) echo "selected"; ?>>Active</option>
                                             <option value="1" <?php if ($status == 1) echo "selected"; ?>>User Deleted</option>
                                             <option value="2" <?php if ($status == 2) echo "selected"; ?>>Admin Deleted</option>
@@ -454,7 +515,7 @@
                                         <?php }else{ ?>
                                         <form action="http://localhost:8000/src/controller/admin_controll.php" class="mx-1 my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
-                                        <select name="new_role" class="badge badge-lg badge-dot" class="form-select">
+                                        <select name="new_role" class="badge badge-lg badge-dot "  >
                                         <?php
 
                                             $query = "SELECT role_id FROM user_role WHERE user_id = ?";
@@ -477,7 +538,7 @@
                                                 $selected = ($role_id == $current_role_id) ? 'selected' : '';
                                                 $disabled = ($role_id == 1) ? 'disabled' : '';
 
-                                                echo "<option value='$role_id' $selected $disabled>$role_name</option>";
+                                                echo "<option value='$rxole_id' $selected $disabled>$role_name</option>";
                                             }
                                         ?>
                                         </select>
@@ -497,27 +558,27 @@
                                         </button>
                                                                                     <!-- Modal for user profile -->
 
-<div class="modal fade" id="userProfileModal<?php echo $id; ?>" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- User profile content goes here -->
-        <p>Name: <?php echo $name; ?></p>
-        <p>Email: <?php echo $email; ?></p>
-        <p>Date: <?php echo $date; ?></p>
-        <p>Phone: <?php echo $phone; ?></p>
-        <!-- You can add more user profile information here -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+                                                        <div class="modal fade" id="userProfileModal<?php echo $id; ?>" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- User profile content goes here -->
+                                                                <p>Name: <?php echo $name; ?></p>
+                                                                <p>Email: <?php echo $email; ?></p>
+                                                                <p>Date: <?php echo $date; ?></p>
+                                                                <p>Phone: <?php echo $phone; ?></p>
+                                                                <!-- You can add more user profile information here -->
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </div>
                                         <?php }?>
                                         <?php }?>
                                     </td>
@@ -527,6 +588,7 @@
 
                                 </tr>
                                 <?php }}?>
+
                                 
                             </tbody>
                         </table>
@@ -543,11 +605,9 @@
                             }
                    
                     $totalPages = ceil($totalItems / $itemsPerPage);
-                    
-                    // Define the number of pagination links to display at a time
+
                     $linksPerPage = 3;
-                    
-                    // Calculate the current range of pagination links
+
                     $startRange = max(1, $page - floor($linksPerPage / 2));
                     $endRange = min($totalPages, $startRange + $linksPerPage - 1);
                     
@@ -614,22 +674,23 @@
             }
         });
     });
-
-
-  // This JavaScript code should be placed at the end of your HTML document
-
-  // Attach a click event handler to all elements with the class "btn-view"
+// *For modal*
   document.querySelectorAll('.btn-view').forEach(function(button) {
     button.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent the default behavior (e.g., navigating to a link)
-
-      // Extract the modal ID from the "data-target" attribute of the clicked button
+      event.preventDefault(); 
       var modalId = button.getAttribute('data-target');
 
-      // Show the modal with the extracted ID
-      $(modalId).modal('show'); // This uses jQuery, which Bootstrap relies on
+      $(modalId).modal('show'); 
     });
   });
+
+  function filterTable() {
+    const statusFilter = document.getElementById('status-filter').value;
+    const roleFilter = document.getElementById('role-filter').value;
+
+    // Redirect to the filtered page with updated filters
+    window.location.href = `http://localhost:8000/templates/dashboard.php?page=1&status=${statusFilter}&role=${roleFilter}`;
+}
 
 
 </script>

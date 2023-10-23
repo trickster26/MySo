@@ -51,6 +51,14 @@ class SignUp extends Models {
     }
 
 
+    // $model = new Models();
+    // $user = $model->getUserByEmail($email);
+    // if ($user && $user['status'] === 0) {
+    //     $_SESSION['exist'] = 'User with this email already exists.';
+    //     header("Location: http://localhost:8000/templates/signup.php");
+    //     exit();
+    // }
+
 
             // Coverting normal password String into SHA256 digest
             $sha256HashPassword = hash('sha256', $password);

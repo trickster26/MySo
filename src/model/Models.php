@@ -34,6 +34,21 @@ class Models
         }
     }
 
+    public function getUserByEmail($email) {
+        // Connect to your database
+        $db = new PDO('mysql:host=localhost;dbname=register01', 'phpmyadmin', 'root');
+
+        // Prepare a SQL query to fetch the user by email
+        $query = $db->prepare("SELECT * FROM users WHERE email = :email");
+        $query->bindParam(':email', $email);
+        $query->execute();
+
+        // Fetch the user data
+        $user = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $user;
+    }
+
     function Check_Exists($email){
         $sql="SELECT id FROM user WHERE email='".$email."'";
         global $conn;
@@ -68,7 +83,7 @@ class Models
 
 
     public function getUserIdByEmail($email) {
-        $query = "SELECT id FROM users WHERE email = ?";
+        $query = "SELECT id FROM user WHERE email = ?";
         global $conn;
 
         $stmt = $conn->prepare($query);
