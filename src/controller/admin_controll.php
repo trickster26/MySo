@@ -36,7 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
     $userId = $_POST["user_id"];
     $newRole = $_POST["new_role"];
     if($newRole != 1){
-        $updateSql = "UPDATE user_role SET role_id = $newRole WHERE user_id = $userId";
+        var_dump($newRole);
+        $updateSql = "UPDATE user_role SET role_id = '$newRole' WHERE user_id = '$userId'";
 
         if ($conn->query($updateSql) === TRUE) {
             header("Location: http://localhost:8000/templates/dashboard.php");

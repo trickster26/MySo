@@ -233,7 +233,7 @@
                 <!-- User (md) -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="http://localhost:8000/templates/edit-user.php">
                             <i class="bi bi-person-square"></i> Account
                         </a>
                     </li>
@@ -260,13 +260,13 @@
                         <!-- Actions -->
                         <div class="col-sm-6 col-12 text-sm-end">
                             <div class="mx-n1">
-                                <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                                <a href="http://localhost:8000/templates/edit-user.php" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
                                     <span class=" pe-2">
                                         <i class="bi bi-pencil"></i>
                                     </span>
                                     <span>Edit</span>
                                 </a>
-                                <a href="#" class="btn d-inline-flex btn-sm btn-primary mx-1">
+                                <a href="http://localhost:8000/templates/create_user.php" class="btn d-inline-flex btn-sm btn-primary mx-1">
                                     <span class=" pe-2">
                                         <i class="bi bi-plus"></i>
                                     </span>
@@ -300,8 +300,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Budget</span>
-                                        <span class="h3 font-bold mb-0">$750.90</span>
+                                    <?php
+                                                $countQuery = "SELECT *  FROM user";
+                                                $countResult = $conn->query($countQuery);
+                                                $total =  $countResult->num_rows;?>
+                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Accounts</span>
+                                        <span class="h3 font-bold mb-0"><?php echo $total;?></span>
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
@@ -323,7 +327,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Accounts</span>
+                                        <span class="h6 font-semibold text-muted text-sm d-block mb-2">Current Accounts Showing</span>
                                         <span class="h3 font-bold mb-0"><?php echo $totalItems; ?></span>
                                     </div>
                                     <div class="col-auto">
@@ -538,7 +542,7 @@
                                                 $selected = ($role_id == $current_role_id) ? 'selected' : '';
                                                 $disabled = ($role_id == 1) ? 'disabled' : '';
 
-                                                echo "<option value='$rxole_id' $selected $disabled>$role_name</option>";
+                                                echo "<option value='$role_id' $selected $disabled>$role_name</option>";
                                             }
                                         ?>
                                         </select>
