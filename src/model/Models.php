@@ -34,7 +34,7 @@ class Models
         }
     }
 
-    public function getUserByEmail($email) {
+    function getUserByEmail($email) {
         // Connect to your database
         $db = new PDO('mysql:host=localhost;dbname=register01', 'phpmyadmin', 'root');
 
@@ -60,7 +60,7 @@ class Models
         }
     }
 
-    public function assignUserRole($user_id, $role_id) {
+    function assignUserRole($user_id, $role_id) {
         $query = "INSERT INTO user_role (user_id, role_id) VALUES (?, ?)";
         global $conn;    
     

@@ -36,12 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
 
         $sql = "INSERT INTO user (name, email, phone, password, status) VALUES ('".$name."','". $email ."','".$phone."' ,'".$dbpass."','".$status."')";
-        var_dump($sql);
         $result = $conn->query($sql);
+        
         var_dump($result);
             if ($result) {
                 $id = $model -> getUserIdByEmail($email);
                 if($conn -> query("INSERT INTO user_role (user_id, role_id) VALUES ('".$id."','".$role."')")){
+                    $profile_query = "INSERT INTO `profile` (`first_name`,  `email`, `phone`,  `user_id`) 
+                    VALUES ('$name', '$email', '$phone', '$id')";
+                    $execute_profile =  $conn->query($profile_query);
                     $_SESSION["insert-success"] = "User Insertes Successfully";
                     header('Location: http://localhost:8000/templates/create_user.php'); 
                     exit();

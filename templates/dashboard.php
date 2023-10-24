@@ -546,7 +546,7 @@
                                             }
                                         ?>
                                         </select>
-                                        <button type="submit" style="color: black;" class="badge badge-pill badge-dark ">Assign</button>
+                                        <button type="submit" style="color: black;" class="badge badge-pill badge-dark">Assign</button>
                                         </form>
                                         <?php }?>
                                     </td>
@@ -691,12 +691,10 @@
   function filterTable() {
     const statusFilter = document.getElementById('status-filter').value;
     const roleFilter = document.getElementById('role-filter').value;
-
-    // Redirect to the filtered page with updated filters
     window.location.href = `http://localhost:8000/templates/dashboard.php?page=1&status=${statusFilter}&role=${roleFilter}`;
 }
 
 
 </script>
-<!-- Include Bootstrap JavaScript at the end of your HTML document -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
