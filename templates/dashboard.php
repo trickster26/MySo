@@ -1,8 +1,11 @@
+
 <?php 
+
     session_start();
     require("../config/connection.php");
+    require("../config/constant.php");
     if($_SESSION['role']!=1 && $_SESSION['role']!=2 && $_SESSION['role']!=3 ){
-        header("location:http://localhost:8000/");
+        header("location:".URL);
         exit;
     }
     if(isset($_SESSION['delete-success'])){
@@ -19,8 +22,6 @@
                 $itemsPerPage = 10;
                 $page = isset($_GET['page']) ? $_GET['page'] : 1;
                 $offset = ($page - 1) * $itemsPerPage;
-                
-
                 $query = "SELECT * FROM user LIMIT $itemsPerPage OFFSET $offset";
                 $result = $conn->query($query);
 
@@ -64,7 +65,7 @@
                 
                 ?>
 <style>
-    @import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
+@import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
 
 /* Bootstrap Icons */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
@@ -99,7 +100,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Brand -->
-            <a class="navbar-brand py-lg-9 mb-lg-5 px-lg-6 me-0" href="http://localhost:8000/">
+            <a class="navbar-brand py-lg-9 mb-lg-5 px-lg-6 me-0" href="<?php URL ?>/">
                 <img width="200px" style="height: 80px !important;" height="4vh" src="../assets/images/1j+ojFVDOMkX9Wytexe43D6kh...OJqhNPmBbFwXs1M3EMoAJtlikqgPtq9vk+" alt="...">
             </a>
             <!-- User menu (mobile) -->
@@ -233,12 +234,12 @@
                 <!-- User (md) -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8000/templates/edit-user.php">
+                        <a class="nav-link" href="<?php URL ?>/templates/edit-user.php">
                             <i class="bi bi-person-square"></i> Account
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8000/src/controller/logout.php">
+                        <a class="nav-link" href="<?php URL ?>/src/controller/logout.php">
                             <i class="bi bi-box-arrow-left"></i> Logout
                         </a>
                     </li>
@@ -260,13 +261,13 @@
                         <!-- Actions -->
                         <div class="col-sm-6 col-12 text-sm-end">
                             <div class="mx-n1">
-                                <a href="http://localhost:8000/templates/edit-user.php" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                                <a href="<?php URL?>/templates/edit-user.php" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
                                     <span class=" pe-2">
                                         <i class="bi bi-pencil"></i>
                                     </span>
                                     <span>Edit</span>
                                 </a>
-                                <a href="http://localhost:8000/templates/create_user.php" class="btn d-inline-flex btn-sm btn-primary mx-1">
+                                <a href="<?php URL ?>/templates/create_user.php" class="btn d-inline-flex btn-sm btn-primary mx-1">
                                     <span class=" pe-2">
                                         <i class="bi bi-plus"></i>
                                     </span>
@@ -401,7 +402,8 @@
 
 
                
-
+                <!-- <form action="<?php URL?>/src/controller/admin_controll.php" method="post"> -->
+                <form id="multi">
 
                 <div class="card shadow border-0 mb-7">
                     <div class="card-header d-flex justify-content-between">
@@ -433,6 +435,12 @@
                         <table class="table table-hover table-nowrap">
                             <thead class="thead-light">
                                 <tr>
+                                    <th scope="col">
+                                
+                                        
+                                        <input  type="checkbox" class="form-check-input" name="<?php echo $checkboxName; ?>" id="selectAll">
+                                        <label class="my-1" for="selectAll">Select All</label>
+                                    </th>    
                                     <th scope="col">Name</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Email</th>
@@ -465,6 +473,9 @@
                                     
                                         ?>
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" class="user-checkbox" name="selectedUsers[]" value="<?php echo$id?>">
+                                    </td>
                                     <td>
                                         <img alt="..." src="<?php if( $image == null || strlen($image)==0 ){ ?>https://cdn.pixabay.com/photo/2014/04/02/10/25/man-303792_1280.png<?php }else{ ?>../assets/images/uploads/<?php echo $id ;?>/<?php echo $image; ?>.<?php echo explode('.',$image)[1]; }?>" class="avatar avatar-sm rounded-circle me-2">
                                         <a class="text-heading font-semibold" href="#">
@@ -501,13 +512,15 @@
                                     <?php if($role==1){ ?>
                                         <span class="badge badge-lg badge-dot mx-6">Active</span>
                                     <?php }else{ ?>
-                                    <form action="http://localhost:8000/src/controller/admin_controll.php" class="my-1" method="post">
+                                    <form action="<?php URL?>/src/controller/admin_controll.php" class="my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                                         <select name="new_status" class="outline badge badge-lg badge-dot" >
                                             <option value="0" <?php if ($status == 0) echo "selected"; ?>>Active</option>
-                                            <option value="1" <?php if ($status == 1) echo "selected"; ?>>User Deleted</option>
+                                            <option value="1" disabled <?php if ($status == 1) echo "selected"; ?>>User Deleted</option>
                                             <option value="2" <?php if ($status == 2) echo "selected"; ?>>Admin Deleted</option>
+                                            <?php if($_SESSION['role']==1){ ?>
                                             <option value="3" <?php if ($status == 3) echo "selected"; ?>>Banned</option>
+                                            <?php } ?>
                                         </select>
                                         <button type="submit" style="color: black;" class="badge badge-pill badge-dark ">Update</button>
                                     </form>
@@ -517,7 +530,7 @@
                                         <?php if($role==1){ ?>
                                             <span class="badge badge-lg badge-dot mx-6">super_user</span>
                                         <?php }else{ ?>
-                                        <form action="http://localhost:8000/src/controller/admin_controll.php" class="mx-1 my-1" method="post">
+                                        <form action="<?php URL?>/src/controller/admin_controll.php" class="mx-1 my-1" method="post">
                                         <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                                         <select name="new_role" class="badge badge-lg badge-dot "  >
                                         <?php
@@ -560,30 +573,31 @@
                                         <button type="button" class="btn btn-sm btn-square btn-neutral text-danger-hover delete-user" data-userid="<?php echo $id; ?>">
                                             <i class="bi bi-trash"></i>
                                         </button>
-                                                                                    <!-- Modal for user profile -->
+                                        <?php }?>                                    
+                                        <!-- Modal for user profile -->
 
-                                                        <div class="modal fade" id="userProfileModal<?php echo $id; ?>" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <!-- User profile content goes here -->
-                                                                <p>Name: <?php echo $name; ?></p>
-                                                                <p>Email: <?php echo $email; ?></p>
-                                                                <p>Date: <?php echo $date; ?></p>
-                                                                <p>Phone: <?php echo $phone; ?></p>
-                                                                <!-- You can add more user profile information here -->
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                        </div>
-                                        <?php }?>
+                                        <div class="modal fade" id="userProfileModal<?php echo $id; ?>" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <!-- User profile content goes here -->
+                                                        <p>Name: <?php echo $name; ?></p>
+                                                        <p>Email: <?php echo $email; ?></p>
+                                                        <p>Date: <?php echo $date; ?></p>
+                                                        <p>Phone: <?php echo $phone; ?></p>
+                                                    <!-- You can add more user profile information here -->
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
                                         <?php }?>
                                     </td>
                                     
@@ -638,6 +652,16 @@
                     ?>
                     <div class="card-footer border-0 py-5">
                         <span class="text-muted text-sm">Showing <?php echo $result->num_rows ?> items out of <?php echo $totalItems; ?> results found</span>
+                        <select name="status" class="outline badge badge-lg badge-dot" >
+                                            <option value="0" <?php if ($status == 0) echo "selected"; ?>>Active</option>
+                                            <option value="1" disabled <?php if ($status == 1) echo "selected"; ?>>User Deleted</option>
+                                            <option value="2" <?php if ($status == 2) echo "selected"; ?>>Admin Deleted</option>
+                                            <?php if($_SESSION['role']==1){ ?>
+                                            <option value="3" <?php if ($status == 3) echo "selected"; ?>>Banned</option>
+                                            <?php } ?>
+                        </select>
+                        <button type="submit" name="processChanges">Process Changes</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -645,6 +669,27 @@
     </div>
 </div>
 <script>
+    document.getElementById('selectAll').addEventListener('change', function () {
+        var checkboxes = document.getElementsByClassName('user-checkbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    });
+
+var checkboxes = document.getElementsByClassName('user-checkbox');
+for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('change', function () {
+        var anySelected = false;
+        for (var j = 0; j < checkboxes.length; j++) {
+            if (!checkboxes[j].checked) {
+                anySelected = false;
+                break;
+            }
+        }
+        document.getElementById('selectAll').checked = anySelected;
+    });
+}
+
     document.addEventListener("DOMContentLoaded", function() {
         const deleteButtons = document.querySelectorAll(".delete-user");
         const confirmationModal = document.getElementById("confirmationModal");
@@ -663,7 +708,7 @@
 
         confirmDeleteButton.addEventListener("click", function() {
             if (userIdToDelete) {
-                window.location.href = "http://localhost:8000/src/controller/admin_controll.php?id=" + userIdToDelete;
+                window.location.href = "<?php URL?>/src/controller/admin_controll.php?id=" + userIdToDelete;
             }
         });
 
@@ -691,10 +736,27 @@
   function filterTable() {
     const statusFilter = document.getElementById('status-filter').value;
     const roleFilter = document.getElementById('role-filter').value;
-    window.location.href = `http://localhost:8000/templates/dashboard.php?page=1&status=${statusFilter}&role=${roleFilter}`;
+    window.location.href = `<?php URL?>/templates/dashboard.php?page=1&status=${statusFilter}&role=${roleFilter}`;
 }
 
 
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+$(function(){
+    $('#multi').on('submit', function (e){
+        e.preventDefault();
+        $.ajax({
+            type:'post',
+            url: '<?php URL?>/src/controller/admin_controll.php',
+            data: $('#multi').serialize(),
+            success: function(){
+                alert('Data Uploaded!');
+                console.log(data);
+            }
+    });
+});
+});
+</script>

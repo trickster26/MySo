@@ -84,7 +84,7 @@ if (isset($_SESSION['success_message'])) {
 
 <div class="container d-flex justify-content-center">
 	<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12 col-xs-12 edit_information">
-		<form action="http://localhost:8000/src/controller/editUser.php" enctype="multipart/form-data" id="edit-form" method="POST">
+		<form action="<?php URL?>/src/controller/editUser.php" enctype="multipart/form-data" id="edit-form" method="POST">
 			<h3 class="text-center">Edit Personal Information</h3>
 			<div style="text-align: center;" class=" mt-3">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

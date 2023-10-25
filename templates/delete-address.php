@@ -1,5 +1,6 @@
 <?php
 require("../config/connection.php");
+require("../config/constant.php");
 include_once("navbar.php");
 
 // Check if the user is authenticated (you should implement user authentication)
@@ -12,7 +13,7 @@ if (!isset($_SESSION['id'])) {
 if (isset($_GET['id'])) {
     $addressId = $_GET['id'];
 } else {
-    header("Location: http://localhost:8000/templates/addresses.php"); // Redirect to your addresses page
+    header("Location:".URL."/templates/addresses.php"); 
     exit;
 }
 
@@ -23,7 +24,7 @@ if (isset($_POST['deleteAddress'])) {
 
     if ($conn->query($deleteQuery)) {
         // Address deleted successfully
-        header("Location: http://localhost:8000/templates/addresses.php"); // Redirect to your addresses page
+        header("Location:".URL."/templates/addresses.php");
         exit;
     } else {
         echo "Error deleting address: " . $conn->error;
@@ -47,7 +48,7 @@ if ($result->num_rows === 1) {
     <p>Are you sure you want to delete this address?</p>
     <p>Street Address: <?php echo $address['street_address']; ?></p>
     
-    <form method="POST" action=" http://localhost:8000/templates/delete-address.php?id=<?php echo $addressId; ?>">
+    <form method="POST" action="<?php URL ?>/templates/delete-address.php?id=<?php echo $addressId; ?>">
         <button type="submit" name="deleteAddress" class="btn btn-danger">Delete Address</button>
     </form>
 </div>

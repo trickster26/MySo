@@ -9,7 +9,7 @@ if (!isset($_SESSION['login_user'])) {
 
 // Check if the user is authenticated (you should implement user authentication)
 if (!isset($_SESSION['id'])) {
-    header("Location: http://localhost:8000/templates/login.php");
+    header("Location:".URL."/templates/login.php");
     exit;
 }
 
@@ -17,7 +17,7 @@ if (!isset($_SESSION['id'])) {
 if (isset($_GET['id'])) {
     $addressId = $_GET['id'];
 } else {
-    header("Location:http://localhost:8000/templates/addresses.php"); 
+    header("Location:".URL."/templates/addresses.php"); 
     exit;
 }
 
@@ -46,7 +46,7 @@ if (isset($_POST['street_address'])) {
 if ($conn->query($updateQuery)) {
     // Address updated successfully
     $_SESSION['edit-address']="Address updated successfully.";
-    header("Location: http://localhost:8000/templates/addresses.php"); 
+    header("Location:".URL."/templates/addresses.php"); 
     exit;
 } else {;
         echo "Error updating address: " . $conn->error;
@@ -61,7 +61,7 @@ if ($result->num_rows === 1) {
     $address = $result->fetch_assoc();
 } else {
     $_SESSION['address-error']="Address not found or unauthorized access.";
-    header("Location: http://localhost:8000/templates/addresses.php");
+    header("Location:".URL."/templates/addresses.php");
     exit;
 }
 

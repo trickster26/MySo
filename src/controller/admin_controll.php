@@ -1,5 +1,9 @@
 <?php
 require('../../config/connection.php');
+require('../../config/constant.php');
+var_dump($_POST);
+var_dump(isset($_POST['processChanges']));
+exit;
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
 
     $userId = $_GET["id"];
@@ -9,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
 
     if ($conn->query($updateSql) === TRUE) {
         $_SESSION['delete-success'] = "Deleted Successfully!";
-        header("Location: http://localhost:8000/templates/dashboard.php");
+        header("Location:". URL."/templates/dashboard.php");
         exit();
     }
     else {
@@ -25,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
     $updateSql = "UPDATE user SET status = $newStatus WHERE id = $userId";
 
     if ($conn->query($updateSql) === TRUE) {
-        header("Location: http://localhost:8000/templates/dashboard.php");
+        header("Location:".URL."/templates/dashboard.php");
         exit();
     } else {
         echo "Error updating status: " . $conn->error;
@@ -40,16 +44,51 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
         $updateSql = "UPDATE user_role SET role_id = '$newRole' WHERE user_id = '$userId'";
 
         if ($conn->query($updateSql) === TRUE) {
-            header("Location: http://localhost:8000/templates/dashboard.php");
+            header("Location:".URL."/templates/dashboard.php");
             exit();
         } else {
             echo "Error updating role: " . $conn->error;
         }
     }else{
-        header("Location: http://localhost:8000/templates/dashboard.php");
+        header("Location:". URL."/templates/dashboard.php");
         exit;
     }
-} else {
+} else if (isset($_POST['processChanges'])) {
+    $selectedUsers = $_POST['selectedUsers'];
+    $newStatus = $_POST['status'];
+    $newRole = $_POST['newRole'];
+    var_dump($_POST['selectedUsers']);
+    var_dump($_POST['status']);
+    exit;
+    // Perform the necessary database updates
+    if (!empty($selectedUsers)) {
+        // Connect to your database (modify this according to your setup)
+        $conn = new mysqli('your_host', 'your_username', 'your_password', 'your_database');
+
+        if ($conn->connect_error) {
+            die('Connection failed: ' . $conn->connect_error);
+        }
+
+        foreach ($selectedUsers as $userId) {
+            $status = $newStatus[$userId];
+            $role = $newRole[$userId];
+
+            // Update the user's status and role in the database
+            $query = "UPDATE user SET status = $status WHERE id = $userId";
+            $conn->query($query);
+
+            // Update the user's role in the user_role table
+            $query = "UPDATE user_role SET role_id = $role WHERE user_id = $userId";
+            $conn->query($query);
+        }
+
+        // Close the database connection
+        $conn->close();
+    }
+    header('Location: your_page.php');
+    exit;
+}
+ else {
     echo "Invalid request.";
 }
 

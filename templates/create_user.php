@@ -1,6 +1,7 @@
 <?php require("navbar.php");
+require("../config/constant.php");
 if ($_SESSION['role'] != 1) {
-    header("location:http://localhost:8000/");
+    header("location:".URL."/");
     exit;
 } ?>
 
@@ -23,7 +24,7 @@ if ($_SESSION['role'] != 1) {
           <div class="card-body p-4 p-md-5">
             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Registration Info</h3>
 
-            <form class="px-md-2" action="http://localhost:8000/src/controller/create_user.php" method="POST">
+            <form class="px-md-2" action="<?php URL ?>/src/controller/create_user.php" method="POST">
 
               <div class="form-outline mb-4">
               
