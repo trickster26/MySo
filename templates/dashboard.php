@@ -1,4 +1,6 @@
-
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <?php 
 
     session_start();
@@ -401,8 +403,7 @@
                 <!-- User Management -->
 
 
-               
-                <!-- <form action="<?php URL?>/src/controller/admin_controll.php" method="post"> -->
+   
                 <form id="multi">
 
                 <div class="card shadow border-0 mb-7">
@@ -432,7 +433,7 @@
                     
                     
                     <div class="table-responsive">
-                        <table class="table table-hover table-nowrap">
+                        <table id="table_id" class="table table-hover table-nowrap">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">
@@ -669,6 +670,13 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+        $('#table_id').DataTable({
+            "paging": true,
+            "pageLength": 10,
+            "order": 1,
+        });
+    });
     document.getElementById('selectAll').addEventListener('change', function () {
         var checkboxes = document.getElementsByClassName('user-checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
@@ -743,17 +751,19 @@ for (var i = 0; i < checkboxes.length; i++) {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
 <script>
 $(function(){
     $('#multi').on('submit', function (e){
         e.preventDefault();
+        console.log($('#multi').serialize())
         $.ajax({
             type:'post',
-            url: '<?php URL?>/src/controller/admin_controll.php',
+            url: '<?php URL?>/src/controller/select_allController.php',
             data: $('#multi').serialize(),
-            success: function(){
+            success: function(data){
                 alert('Data Uploaded!');
+                
                 console.log(data);
             }
     });

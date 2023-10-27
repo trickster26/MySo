@@ -53,41 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
         header("Location:". URL."/templates/dashboard.php");
         exit;
     }
-} else if (isset($_POST['processChanges'])) {
-    $selectedUsers = $_POST['selectedUsers'];
-    $newStatus = $_POST['status'];
-    $newRole = $_POST['newRole'];
-    var_dump($_POST['selectedUsers']);
-    var_dump($_POST['status']);
-    exit;
-    // Perform the necessary database updates
-    if (!empty($selectedUsers)) {
-        // Connect to your database (modify this according to your setup)
-        $conn = new mysqli('your_host', 'your_username', 'your_password', 'your_database');
+} 
 
-        if ($conn->connect_error) {
-            die('Connection failed: ' . $conn->connect_error);
-        }
 
-        foreach ($selectedUsers as $userId) {
-            $status = $newStatus[$userId];
-            $role = $newRole[$userId];
 
-            // Update the user's status and role in the database
-            $query = "UPDATE user SET status = $status WHERE id = $userId";
-            $conn->query($query);
-
-            // Update the user's role in the user_role table
-            $query = "UPDATE user_role SET role_id = $role WHERE user_id = $userId";
-            $conn->query($query);
-        }
-
-        // Close the database connection
-        $conn->close();
-    }
-    header('Location: your_page.php');
-    exit;
-}
  else {
     echo "Invalid request.";
 }
