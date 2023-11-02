@@ -23,18 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query = "UPDATE user SET status = $newStatus WHERE id = $userId";
             $result = $conn->query($query);
             echo"$query";
-            if($result){
-                header("Location:". URL."/templates/dashboard.php");
-                exit;
-            }
+            
 
             // Update the user's role in the user_role table
             // $query = "UPDATE user_role SET role_id = $role WHERE user_id = $userId";
             // $conn->query($query);
             // echo "$query";
         }
+      
 
-        // Close the database connection
         $conn->close();
         
         
