@@ -52,7 +52,7 @@ class SignUp extends Models {
 
 
     // $model = new Models();
-    // $user = $model->getUserByEmail($email);
+    // $user = $model->getUserByEModelsmail($email);
     // if ($user && $user['status'] === 0) {
     //     $_SESSION['exist'] = 'User with this email already exists.';
     //     header("Location: http://localhost:8000/templates/signup.php");

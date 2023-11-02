@@ -762,9 +762,7 @@ $(function(){
             url: '<?php URL?>/src/controller/select_allController.php',
             data: $('#multi').serialize(),
             success: function(data){
-                alert('Data Uploaded!');
-                
-                console.log(data);
+                window.location.reload();
             }
     });
 });
